@@ -107,3 +107,12 @@ DEFAULT_FORECAST_HORIZON_DAYS = 30   # Days to forecast forward
 DEFAULT_LEAD_TIME_DAYS = 7           # Default supplier lead time (days)
 SAFETY_STOCK_FACTOR = 1.65           # Z-score for ~95 % service level
 FORECAST_SMA_WINDOW = 14             # Default SMA/WMA window (days)
+
+# Optimization Configuration (Phase 5)
+DEFAULT_ORDERING_COST = 50.0         # $ per order (labor, admin, shipping coordination)
+SERVICE_LEVEL_Z = 1.65               # Default z-score (~95 % service level)
+SERVICE_LEVELS = {                   # Available service levels for UI selector
+    "90% (Z=1.28)": 1.28,
+    "95% (Z=1.65)": 1.65,
+    "99% (Z=2.33)": 2.33,
+}

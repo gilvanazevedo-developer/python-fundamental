@@ -28,6 +28,7 @@ from src.ui.views.inventory_view import InventoryView
 from src.ui.views.import_view import ImportView
 from src.ui.views.analytics_view import AnalyticsView
 from src.ui.views.forecast_view import ForecastView
+from src.ui.views.optimization_view import OptimizationView
 from src.ui.components.status_bar import StatusBar
 from src.logger import LoggerMixin
 
@@ -98,11 +99,12 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
 
         # Navigation buttons
         nav_items = [
-            ("dashboard",  "Dashboard"),
-            ("inventory",  "Inventory"),
-            ("analytics",  "Analytics"),
-            ("forecasting", "Forecasting"),
-            ("import",     "Import Data"),
+            ("dashboard",     "Dashboard"),
+            ("inventory",     "Inventory"),
+            ("analytics",     "Analytics"),
+            ("forecasting",   "Forecasting"),
+            ("optimization",  "Optimization"),
+            ("import",        "Import Data"),
         ]
 
         for view_name, label in nav_items:
@@ -146,11 +148,12 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         self._content_frame.grid_rowconfigure(0, weight=1)
         self._content_frame.grid_columnconfigure(0, weight=1)
 
-        self._views["dashboard"]   = DashboardView(self._content_frame)
-        self._views["inventory"]   = InventoryView(self._content_frame)
-        self._views["analytics"]   = AnalyticsView(self._content_frame)
-        self._views["forecasting"] = ForecastView(self._content_frame)
-        self._views["import"]      = ImportView(
+        self._views["dashboard"]    = DashboardView(self._content_frame)
+        self._views["inventory"]    = InventoryView(self._content_frame)
+        self._views["analytics"]    = AnalyticsView(self._content_frame)
+        self._views["forecasting"]  = ForecastView(self._content_frame)
+        self._views["optimization"] = OptimizationView(self._content_frame)
+        self._views["import"]       = ImportView(
             self._content_frame, on_import_complete=self._on_import_complete
         )
 
@@ -204,3 +207,6 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         forecasting = self._views.get("forecasting")
         if forecasting:
             forecasting.mark_stale()
+        optimization = self._views.get("optimization")
+        if optimization:
+            optimization.mark_stale()
