@@ -1,1 +1,1 @@
-"""Analytics package — ABC classification and inventory turnover."""
+"""Analytics package — ABC classification, inventory turnover, and demand forecasting."""

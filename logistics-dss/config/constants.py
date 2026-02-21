@@ -101,3 +101,9 @@ TABLE_PAGE_SIZE = 50  # Rows per page in data tables
 ABC_A_THRESHOLD = 0.70  # Cumulative revenue cutoff for class A
 ABC_B_THRESHOLD = 0.90  # Cumulative revenue cutoff for class A+B
 DEFAULT_ANALYTICS_DAYS = 90  # Default sales lookback period for ABC analysis
+
+# Forecasting Configuration (Phase 4)
+DEFAULT_FORECAST_HORIZON_DAYS = 30   # Days to forecast forward
+DEFAULT_LEAD_TIME_DAYS = 7           # Default supplier lead time (days)
+SAFETY_STOCK_FACTOR = 1.65           # Z-score for ~95 % service level
+FORECAST_SMA_WINDOW = 14             # Default SMA/WMA window (days)
