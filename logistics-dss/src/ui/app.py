@@ -13,6 +13,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 from config import settings
 from src.database.connection import get_db_manager
+from src.i18n import t, set_language, get_language
 from src.ui.theme import (
     COLOR_PRIMARY,
     COLOR_BG_SIDEBAR_DARK,
@@ -100,19 +101,20 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
 
         # Navigation buttons
         nav_items = [
-            ("executive",     "Executive"),
-            ("dashboard",     "Dashboard"),
-            ("inventory",     "Inventory"),
-            ("analytics",     "Analytics"),
-            ("forecasting",   "Forecasting"),
-            ("optimization",  "Optimization"),
-            ("import",        "Import Data"),
+            ("executive",    "nav.executive"),
+            ("dashboard",    "nav.dashboard"),
+            ("inventory",    "nav.inventory"),
+            ("analytics",    "nav.analytics"),
+            ("forecasting",  "nav.forecasting"),
+            ("optimization", "nav.optimization"),
+            ("import",       "nav.import"),
         ]
+        self._nav_label_keys = {v: k for v, k in nav_items}
 
-        for view_name, label in nav_items:
+        for view_name, lbl_key in nav_items:
             btn = ctk.CTkButton(
                 self._sidebar,
-                text=label,
+                text=t(lbl_key),
                 font=FONT_NAV,
                 height=40,
                 corner_radius=8,
@@ -127,11 +129,30 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
 
         # Appearance mode toggle at bottom
         self._sidebar.pack_propagate(False)
-        mode_frame = ctk.CTkFrame(self._sidebar, fg_color="transparent")
-        mode_frame.pack(side="bottom", fill="x", padx=10, pady=15)
 
-        mode_label = ctk.CTkLabel(mode_frame, text="Appearance:", font=FONT_STATUS)
-        mode_label.pack(anchor="w")
+        # Language selector (above appearance)
+        lang_frame = ctk.CTkFrame(self._sidebar, fg_color="transparent")
+        lang_frame.pack(side="bottom", fill="x", padx=10, pady=(0, 5))
+
+        self._lbl_language = ctk.CTkLabel(lang_frame, text=t("app.language"), font=FONT_STATUS)
+        self._lbl_language.pack(anchor="w")
+
+        _lang_display = {"en": "English", "pt": "Português", "es": "Español"}
+        self._lang_menu = ctk.CTkOptionMenu(
+            lang_frame,
+            values=["English", "Português", "Español"],
+            command=self._change_language,
+            width=140,
+            height=28,
+        )
+        self._lang_menu.set(_lang_display.get(settings.DEFAULT_LANGUAGE, "English"))
+        self._lang_menu.pack(fill="x", pady=(3, 0))
+
+        mode_frame = ctk.CTkFrame(self._sidebar, fg_color="transparent")
+        mode_frame.pack(side="bottom", fill="x", padx=10, pady=(0, 5))
+
+        self._lbl_appearance = ctk.CTkLabel(mode_frame, text=t("app.appearance"), font=FONT_STATUS)
+        self._lbl_appearance.pack(anchor="w")
 
         self._mode_menu = ctk.CTkOptionMenu(
             mode_frame,
@@ -193,6 +214,30 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
     def _change_appearance(self, mode: str):
         """Change appearance mode."""
         ctk.set_appearance_mode(mode.lower())
+
+    def _change_language(self, choice: str):
+        """Switch the active UI language and refresh all views."""
+        lang_map = {"English": "en", "Português": "pt", "Español": "es"}
+        set_language(lang_map.get(choice, "en"))
+
+        # Update sidebar labels
+        self._lbl_appearance.configure(text=t("app.appearance"))
+        self._lbl_language.configure(text=t("app.language"))
+
+        # Update nav buttons (restore transparent style first)
+        for view_name, btn in self._nav_buttons.items():
+            lbl_key = self._nav_label_keys.get(view_name, view_name)
+            if view_name == self._current_view_name:
+                btn.configure(text=t(lbl_key), fg_color=COLOR_PRIMARY, font=FONT_NAV_ACTIVE)
+            else:
+                btn.configure(text=t(lbl_key), fg_color="transparent", font=FONT_NAV)
+
+        # Delegate to views that support language switching
+        for view in self._views.values():
+            if hasattr(view, "update_language"):
+                view.update_language()
+
+        self.logger.debug(f"Language changed to: {get_language()}")
 
     def _on_import_complete(self):
         """Called after a successful import to refresh other views."""

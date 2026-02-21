@@ -28,6 +28,7 @@ from src.ui.theme import (
     format_percentage,
     format_number,
 )
+from src.i18n import t
 from src.logger import LoggerMixin
 
 # Colour scheme for ABC classes
@@ -64,42 +65,44 @@ class AnalyticsView(ctk.CTkFrame, LoggerMixin):
         )
 
         # Section title
-        ctk.CTkLabel(
+        self._lbl_section_title = ctk.CTkLabel(
             self._scroll,
-            text="ABC Classification — Class Summary",
+            text=t("analytics.title"),
             font=FONT_SUBHEADER,
             anchor="w",
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
+        )
+        self._lbl_section_title.pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
 
         # Three summary cards (A, B, C) in one row
         cards_frame = ctk.CTkFrame(self._scroll, fg_color="transparent")
         cards_frame.pack(fill="x", padx=SECTION_PADDING, pady=(0, 10))
 
         self._class_cards: dict[str, dict] = {}
+        self._class_header_labels: dict[str, ctk.CTkLabel] = {}
         class_defs = [
-            ("A", "Class A — High Value", COLOR_SUCCESS),
-            ("B", "Class B — Medium Value", COLOR_WARNING),
-            ("C", "Class C — Low Value", COLOR_NEUTRAL),
+            ("A", "analytics.class.a", COLOR_SUCCESS),
+            ("B", "analytics.class.b", COLOR_WARNING),
+            ("C", "analytics.class.c", COLOR_NEUTRAL),
         ]
 
-        for col, (cls, label, color) in enumerate(class_defs):
+        for col, (cls, lbl_key, color) in enumerate(class_defs):
             frame = ctk.CTkFrame(cards_frame)
             frame.grid(row=0, column=col, padx=5, pady=5, sticky="nsew")
             cards_frame.grid_columnconfigure(col, weight=1)
 
             # Class header label
-            ctk.CTkLabel(frame, text=label, font=FONT_SUBHEADER,
-                         text_color=color, anchor="w").pack(
-                fill="x", padx=12, pady=(10, 4)
-            )
+            hdr = ctk.CTkLabel(frame, text=t(lbl_key), font=FONT_SUBHEADER,
+                               text_color=color, anchor="w")
+            hdr.pack(fill="x", padx=12, pady=(10, 4))
+            self._class_header_labels[cls] = (hdr, lbl_key)
 
-            count_card = KPICard(frame, label="Products", value="--", color=color)
+            count_card = KPICard(frame, label=t("analytics.kpi.products"), value="--", color=color)
             count_card.pack(fill="x", padx=8, pady=3)
 
-            rev_card = KPICard(frame, label="Revenue", value="--", color=color)
+            rev_card = KPICard(frame, label=t("analytics.kpi.revenue"), value="--", color=color)
             rev_card.pack(fill="x", padx=8, pady=3)
 
-            pct_card = KPICard(frame, label="Revenue Share", value="--", color=color)
+            pct_card = KPICard(frame, label=t("analytics.kpi.revenue_share"), value="--", color=color)
             pct_card.pack(fill="x", padx=8, pady=(3, 10))
 
             self._class_cards[cls] = {
@@ -121,26 +124,27 @@ class AnalyticsView(ctk.CTkFrame, LoggerMixin):
         self._product_chart.grid(row=0, column=1, padx=(5, 0), pady=5, sticky="nsew")
 
         # Detail table
-        ctk.CTkLabel(
+        self._lbl_detail = ctk.CTkLabel(
             self._scroll,
-            text="Product Classification Detail",
+            text=t("analytics.section.detail"),
             font=FONT_SUBHEADER,
             anchor="w",
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
+        )
+        self._lbl_detail.pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
 
         self._detail_table = DataTable(
             self._scroll,
             columns=[
-                {"key": "abc_class",       "label": "Class",       "width": 60,  "anchor": "center"},
-                {"key": "product_id",      "label": "SKU",         "width": 100},
-                {"key": "product_name",    "label": "Product",     "width": 220},
-                {"key": "category",        "label": "Category",    "width": 110},
-                {"key": "total_revenue",   "label": "Revenue ($)", "width": 110, "anchor": "e"},
-                {"key": "revenue_pct",     "label": "Rev %",       "width": 70,  "anchor": "e"},
-                {"key": "cumulative_pct",  "label": "Cumul %",     "width": 75,  "anchor": "e"},
-                {"key": "current_stock",   "label": "Stock",       "width": 75,  "anchor": "e"},
-                {"key": "turnover_rate",   "label": "Turnover",    "width": 80,  "anchor": "e"},
-                {"key": "days_of_inventory", "label": "DOI",       "width": 65,  "anchor": "e"},
+                {"key": "abc_class",        "label": t("col.class"),          "width": 60,  "anchor": "center"},
+                {"key": "product_id",        "label": t("col.sku"),            "width": 100},
+                {"key": "product_name",      "label": t("col.product"),        "width": 220},
+                {"key": "category",          "label": t("col.category"),       "width": 110},
+                {"key": "total_revenue",     "label": t("col.revenue_dollar"), "width": 110, "anchor": "e"},
+                {"key": "revenue_pct",       "label": t("col.rev_pct"),        "width": 70,  "anchor": "e"},
+                {"key": "cumulative_pct",    "label": t("col.cumul_pct"),      "width": 75,  "anchor": "e"},
+                {"key": "current_stock",     "label": t("col.stock"),          "width": 75,  "anchor": "e"},
+                {"key": "turnover_rate",     "label": t("col.turnover"),       "width": 80,  "anchor": "e"},
+                {"key": "days_of_inventory", "label": t("col.doi"),            "width": 65,  "anchor": "e"},
             ],
             height=16,
         )
@@ -222,12 +226,12 @@ class AnalyticsView(ctk.CTkFrame, LoggerMixin):
             # ChartPanel.plot_bar takes a single color; draw manually for multi-color
             self._revenue_chart._ax.clear()
             if any(v > 0 for v in values):
-                bars = self._revenue_chart._ax.bar(
+                self._revenue_chart._ax.bar(
                     labels, values, color=colors, width=0.5, zorder=3
                 )
-                self._revenue_chart._style_axis("Revenue by ABC Class ($)")
+                self._revenue_chart._style_axis(t("analytics.chart.revenue"))
             else:
-                self._revenue_chart.plot_bar([], [], title="Revenue by ABC Class ($)")
+                self._revenue_chart.plot_bar([], [], title=t("analytics.chart.revenue"))
                 return
             self._revenue_chart._figure.tight_layout()
             self._revenue_chart._mpl_canvas.draw_idle()
@@ -245,9 +249,9 @@ class AnalyticsView(ctk.CTkFrame, LoggerMixin):
                 self._product_chart._ax.bar(
                     labels, values, color=colors, width=0.5, zorder=3
                 )
-                self._product_chart._style_axis("Products per ABC Class")
+                self._product_chart._style_axis(t("analytics.chart.products"))
             else:
-                self._product_chart.plot_bar([], [], title="Products per ABC Class")
+                self._product_chart.plot_bar([], [], title=t("analytics.chart.products"))
                 return
             self._product_chart._figure.tight_layout()
             self._product_chart._mpl_canvas.draw_idle()
@@ -273,3 +277,38 @@ class AnalyticsView(ctk.CTkFrame, LoggerMixin):
     def mark_stale(self):
         """Mark the view for refresh on next display."""
         self._stale = True
+
+    def update_language(self):
+        """Refresh all translatable text after a language change."""
+        self._lbl_section_title.configure(text=t("analytics.title"))
+        self._lbl_detail.configure(text=t("analytics.section.detail"))
+
+        for cls, (hdr_lbl, lbl_key) in self._class_header_labels.items():
+            hdr_lbl.configure(text=t(lbl_key))
+            cards = self._class_cards.get(cls, {})
+            cards.get("count") and cards["count"].set_label(t("analytics.kpi.products"))
+            cards.get("revenue") and cards["revenue"].set_label(t("analytics.kpi.revenue"))
+            cards.get("pct") and cards["pct"].set_label(t("analytics.kpi.revenue_share"))
+
+        _update_tree_headings(self._detail_table, {
+            "abc_class":        "col.class",
+            "product_id":       "col.sku",
+            "product_name":     "col.product",
+            "category":         "col.category",
+            "total_revenue":    "col.revenue_dollar",
+            "revenue_pct":      "col.rev_pct",
+            "cumulative_pct":   "col.cumul_pct",
+            "current_stock":    "col.stock",
+            "turnover_rate":    "col.turnover",
+            "days_of_inventory":"col.doi",
+        })
+        self.mark_stale()
+
+
+def _update_tree_headings(table, col_key_map: dict) -> None:
+    from src.i18n import t as _t
+    for col_key, trans_key in col_key_map.items():
+        try:
+            table._tree.heading(col_key, text=_t(trans_key))
+        except Exception:
+            pass

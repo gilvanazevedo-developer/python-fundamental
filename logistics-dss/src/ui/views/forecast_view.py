@@ -30,6 +30,7 @@ from src.ui.theme import (
     format_number,
     format_currency,
 )
+from src.i18n import t
 from src.logger import LoggerMixin
 
 _URGENCY_COLORS = {
@@ -68,9 +69,8 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
         controls.pack(fill="x", padx=SECTION_PADDING, pady=(SECTION_PADDING, 6))
 
         # Category filter
-        ctk.CTkLabel(controls, text="Category:", font=FONT_SMALL).grid(
-            row=0, column=0, padx=(0, 4), sticky="w"
-        )
+        self._lbl_cat = ctk.CTkLabel(controls, text=t("common.category"), font=FONT_SMALL)
+        self._lbl_cat.grid(row=0, column=0, padx=(0, 4), sticky="w")
         self._cat_var = ctk.StringVar(value="All")
         self._cat_menu = ctk.CTkOptionMenu(
             controls, variable=self._cat_var,
@@ -80,9 +80,8 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
         self._cat_menu.grid(row=0, column=1, padx=(0, 16), sticky="w")
 
         # Lookback period
-        ctk.CTkLabel(controls, text="History (days):", font=FONT_SMALL).grid(
-            row=0, column=2, padx=(0, 4), sticky="w"
-        )
+        self._lbl_history = ctk.CTkLabel(controls, text=t("common.history_days"), font=FONT_SMALL)
+        self._lbl_history.grid(row=0, column=2, padx=(0, 4), sticky="w")
         self._period_var = ctk.StringVar(value="90")
         self._period_menu = ctk.CTkOptionMenu(
             controls, variable=self._period_var,
@@ -92,9 +91,8 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
         self._period_menu.grid(row=0, column=3, padx=(0, 16), sticky="w")
 
         # Forecast horizon
-        ctk.CTkLabel(controls, text="Horizon (days):", font=FONT_SMALL).grid(
-            row=0, column=4, padx=(0, 4), sticky="w"
-        )
+        self._lbl_horizon = ctk.CTkLabel(controls, text=t("common.horizon_days"), font=FONT_SMALL)
+        self._lbl_horizon.grid(row=0, column=4, padx=(0, 4), sticky="w")
         self._horizon_var = ctk.StringVar(value="30")
         self._horizon_menu = ctk.CTkOptionMenu(
             controls, variable=self._horizon_var,
@@ -104,9 +102,8 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
         self._horizon_menu.grid(row=0, column=5, padx=(0, 16), sticky="w")
 
         # Forecast method
-        ctk.CTkLabel(controls, text="Method:", font=FONT_SMALL).grid(
-            row=0, column=6, padx=(0, 4), sticky="w"
-        )
+        self._lbl_method = ctk.CTkLabel(controls, text=t("common.method"), font=FONT_SMALL)
+        self._lbl_method.grid(row=0, column=6, padx=(0, 4), sticky="w")
         self._method_var = ctk.StringVar(value="SMA")
         self._method_menu = ctk.CTkOptionMenu(
             controls, variable=self._method_var,
@@ -116,40 +113,45 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
         self._method_menu.grid(row=0, column=7, padx=(0, 16), sticky="w")
 
         # Refresh button
-        ctk.CTkButton(
-            controls, text="Refresh", width=90, height=28,
+        self._btn_refresh = ctk.CTkButton(
+            controls, text=t("common.refresh"), width=90, height=28,
             command=self._reload,
-        ).grid(row=0, column=8, sticky="w")
+        )
+        self._btn_refresh.grid(row=0, column=8, sticky="w")
 
         # ── Summary KPI cards ──────────────────────────────────────────
-        ctk.CTkLabel(
-            self._scroll, text="Demand Overview", font=FONT_SUBHEADER, anchor="w"
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(10, 3))
+        self._lbl_overview = ctk.CTkLabel(
+            self._scroll, text=t("forecast.section.overview"), font=FONT_SUBHEADER, anchor="w"
+        )
+        self._lbl_overview.pack(fill="x", padx=SECTION_PADDING, pady=(10, 3))
 
         kpi_frame = ctk.CTkFrame(self._scroll, fg_color="transparent")
         kpi_frame.pack(fill="x", padx=SECTION_PADDING, pady=(0, 10))
 
         kpi_defs = [
-            ("critical",  "Critical SKUs",  COLOR_DANGER),
-            ("warning",   "Warning SKUs",   COLOR_WARNING),
-            ("ok",        "On-Track SKUs",  COLOR_SUCCESS),
-            ("no_demand", "No-Demand SKUs", COLOR_NEUTRAL),
+            ("critical",  "forecast.kpi.critical",  COLOR_DANGER),
+            ("warning",   "forecast.kpi.warning",   COLOR_WARNING),
+            ("ok",        "forecast.kpi.on_track",  COLOR_SUCCESS),
+            ("no_demand", "forecast.kpi.no_demand", COLOR_NEUTRAL),
         ]
         self._kpi_cards: dict[str, KPICard] = {}
-        for col, (key, label, color) in enumerate(kpi_defs):
-            card = KPICard(kpi_frame, label=label, value="--", color=color)
+        self._kpi_label_keys: dict[str, str] = {}
+        for col, (key, lbl_key, color) in enumerate(kpi_defs):
+            card = KPICard(kpi_frame, label=t(lbl_key), value="--", color=color)
             card.grid(row=0, column=col, padx=5, pady=5, sticky="nsew")
             kpi_frame.grid_columnconfigure(col, weight=1)
             self._kpi_cards[key] = card
+            self._kpi_label_keys[key] = lbl_key
 
         # ── Forecast chart (appears after row selection) ───────────────
-        ctk.CTkLabel(
-            self._scroll, text="Product Demand Forecast", font=FONT_SUBHEADER, anchor="w"
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
+        self._lbl_chart = ctk.CTkLabel(
+            self._scroll, text=t("forecast.section.chart"), font=FONT_SUBHEADER, anchor="w"
+        )
+        self._lbl_chart.pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
 
         self._chart_hint = ctk.CTkLabel(
             self._scroll,
-            text="Select a product row below to view its forecast chart.",
+            text=t("forecast.chart.placeholder"),
             font=FONT_SMALL, text_color=COLOR_NEUTRAL, anchor="w",
         )
         self._chart_hint.pack(fill="x", padx=SECTION_PADDING)
@@ -160,23 +162,24 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
         )
 
         # ── Reorder recommendations table ──────────────────────────────
-        ctk.CTkLabel(
-            self._scroll, text="Reorder Recommendations", font=FONT_SUBHEADER, anchor="w"
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
+        self._lbl_recommendations = ctk.CTkLabel(
+            self._scroll, text=t("forecast.section.recommendations"), font=FONT_SUBHEADER, anchor="w"
+        )
+        self._lbl_recommendations.pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
 
         self._reco_table = DataTable(
             self._scroll,
             columns=[
-                {"key": "urgency",            "label": "Urgency",     "width": 90,  "anchor": "center"},
-                {"key": "product_id",         "label": "SKU",         "width": 100},
-                {"key": "product_name",       "label": "Product",     "width": 200},
-                {"key": "category",           "label": "Category",    "width": 110},
-                {"key": "current_stock",      "label": "Stock",       "width": 75,  "anchor": "e"},
-                {"key": "avg_daily_demand",   "label": "Avg/Day",     "width": 75,  "anchor": "e"},
-                {"key": "forecast_daily",     "label": "Fcst/Day",    "width": 75,  "anchor": "e"},
-                {"key": "reorder_point",      "label": "ROP",         "width": 65,  "anchor": "e"},
-                {"key": "safety_stock",       "label": "Safety Stk",  "width": 80,  "anchor": "e"},
-                {"key": "days_until_stockout","label": "Days Left",   "width": 80,  "anchor": "e"},
+                {"key": "urgency",            "label": t("col.urgency"),    "width": 90,  "anchor": "center"},
+                {"key": "product_id",         "label": t("col.sku"),        "width": 100},
+                {"key": "product_name",       "label": t("col.product"),    "width": 200},
+                {"key": "category",           "label": t("col.category"),   "width": 110},
+                {"key": "current_stock",      "label": t("col.stock"),      "width": 75,  "anchor": "e"},
+                {"key": "avg_daily_demand",   "label": t("col.avg_day"),    "width": 75,  "anchor": "e"},
+                {"key": "forecast_daily",     "label": t("col.fcst_day"),   "width": 75,  "anchor": "e"},
+                {"key": "reorder_point",      "label": t("col.rop"),        "width": 65,  "anchor": "e"},
+                {"key": "safety_stock",       "label": t("col.safety_stk"), "width": 80,  "anchor": "e"},
+                {"key": "days_until_stockout","label": t("col.days_left"),  "width": 80,  "anchor": "e"},
             ],
             on_select=self._on_row_selected,
             height=14,
@@ -221,9 +224,7 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
             self._load_table(recommendations)
             self._selected_product_id = None
             self._forecast_chart.clear()
-            self._chart_hint.configure(
-                text="Select a product row below to view its forecast chart."
-            )
+            self._chart_hint.configure(text=t("forecast.chart.placeholder"))
         except Exception as e:
             self.logger.error(f"Forecast reload failed: {e}")
 
@@ -335,3 +336,41 @@ class ForecastView(ctk.CTkFrame, LoggerMixin):
 
     def mark_stale(self):
         self._stale = True
+
+    def update_language(self):
+        """Refresh all translatable text after a language change."""
+        self._lbl_cat.configure(text=t("common.category"))
+        self._lbl_history.configure(text=t("common.history_days"))
+        self._lbl_horizon.configure(text=t("common.horizon_days"))
+        self._lbl_method.configure(text=t("common.method"))
+        self._btn_refresh.configure(text=t("common.refresh"))
+        self._lbl_overview.configure(text=t("forecast.section.overview"))
+        self._lbl_chart.configure(text=t("forecast.section.chart"))
+        self._lbl_recommendations.configure(text=t("forecast.section.recommendations"))
+        self._chart_hint.configure(text=t("forecast.chart.placeholder"))
+
+        for key, lbl_key in self._kpi_label_keys.items():
+            self._kpi_cards[key].set_label(t(lbl_key))
+
+        _update_tree_headings(self._reco_table, {
+            "urgency":            "col.urgency",
+            "product_id":         "col.sku",
+            "product_name":       "col.product",
+            "category":           "col.category",
+            "current_stock":      "col.stock",
+            "avg_daily_demand":   "col.avg_day",
+            "forecast_daily":     "col.fcst_day",
+            "reorder_point":      "col.rop",
+            "safety_stock":       "col.safety_stk",
+            "days_until_stockout":"col.days_left",
+        })
+        self.mark_stale()
+
+
+def _update_tree_headings(table, col_key_map: dict) -> None:
+    from src.i18n import t as _t
+    for col_key, trans_key in col_key_map.items():
+        try:
+            table._tree.heading(col_key, text=_t(trans_key))
+        except Exception:
+            pass

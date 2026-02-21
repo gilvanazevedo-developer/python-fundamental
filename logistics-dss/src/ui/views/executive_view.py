@@ -31,6 +31,7 @@ from src.ui.theme import (
     format_percentage,
     format_number,
 )
+from src.i18n import t
 from src.logger import LoggerMixin
 
 _PERIODS = ["30", "60", "90", "180"]
@@ -59,51 +60,57 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
         header = ctk.CTkFrame(self._scroll, fg_color="transparent")
         header.pack(fill="x", padx=SECTION_PADDING, pady=(SECTION_PADDING, 6))
 
-        ctk.CTkLabel(header, text="Executive Dashboard",
-                     font=FONT_SUBHEADER, anchor="w").pack(side="left")
+        self._lbl_title = ctk.CTkLabel(
+            header, text=t("exec.title"), font=FONT_SUBHEADER, anchor="w"
+        )
+        self._lbl_title.pack(side="left")
 
         btn_frame = ctk.CTkFrame(header, fg_color="transparent")
         btn_frame.pack(side="right")
 
-        ctk.CTkLabel(btn_frame, text="Period:", font=FONT_SMALL).pack(
-            side="left", padx=(0, 4)
-        )
+        self._lbl_period = ctk.CTkLabel(btn_frame, text=t("common.period"), font=FONT_SMALL)
+        self._lbl_period.pack(side="left", padx=(0, 4))
+
         self._period_var = ctk.StringVar(value="90")
         ctk.CTkOptionMenu(
             btn_frame, variable=self._period_var, values=_PERIODS,
             width=80, height=28, command=self._on_period_change,
         ).pack(side="left", padx=(0, 12))
 
-        ctk.CTkButton(
-            btn_frame, text="Export Excel", width=110, height=28,
+        self._btn_excel = ctk.CTkButton(
+            btn_frame, text=t("common.export_excel"), width=110, height=28,
             fg_color=COLOR_SUCCESS, hover_color="#25895e",
             command=self._export_excel,
-        ).pack(side="left", padx=(0, 6))
+        )
+        self._btn_excel.pack(side="left", padx=(0, 6))
 
-        ctk.CTkButton(
-            btn_frame, text="Export CSV", width=95, height=28,
+        self._btn_csv = ctk.CTkButton(
+            btn_frame, text=t("common.export_csv"), width=95, height=28,
             fg_color=COLOR_PRIMARY,
             command=self._export_csv,
-        ).pack(side="left")
+        )
+        self._btn_csv.pack(side="left")
 
         # ── KPI cards row ──────────────────────────────────────────────
         kpi_frame = ctk.CTkFrame(self._scroll, fg_color="transparent")
         kpi_frame.pack(fill="x", padx=SECTION_PADDING, pady=(8, 10))
 
         kpi_defs = [
-            ("revenue",        f"Revenue (90d)",       COLOR_PRIMARY),
-            ("inventory_value","Inventory Value",       COLOR_SUCCESS),
-            ("carrying_cost",  "Carrying Cost/Month",  COLOR_WARNING),
-            ("stockout_rate",  "Stockout Rate",         COLOR_DANGER),
-            ("savings",        "EOQ Savings Opp.",      COLOR_WARNING),
-            ("fill_rate",      "Fill Rate",             COLOR_SUCCESS),
+            ("revenue",         "exec.kpi.revenue",         COLOR_PRIMARY),
+            ("inventory_value", "exec.kpi.inventory_value", COLOR_SUCCESS),
+            ("carrying_cost",   "exec.kpi.carrying_cost",   COLOR_WARNING),
+            ("stockout_rate",   "exec.kpi.stockout_rate",   COLOR_DANGER),
+            ("savings",         "exec.kpi.savings",         COLOR_WARNING),
+            ("fill_rate",       "exec.kpi.fill_rate",       COLOR_SUCCESS),
         ]
         self._kpi_cards: dict[str, KPICard] = {}
-        for i, (key, label, color) in enumerate(kpi_defs):
-            card = KPICard(kpi_frame, label=label, value="--", color=color)
+        self._kpi_label_keys: dict[str, str] = {}
+        for i, (key, lbl_key, color) in enumerate(kpi_defs):
+            card = KPICard(kpi_frame, label=t(lbl_key), value="--", color=color)
             card.grid(row=0, column=i, padx=5, pady=5, sticky="nsew")
             kpi_frame.grid_columnconfigure(i, weight=1)
             self._kpi_cards[key] = card
+            self._kpi_label_keys[key] = lbl_key
 
         # ── Charts row ─────────────────────────────────────────────────
         charts_frame = ctk.CTkFrame(self._scroll, fg_color="transparent")
@@ -124,58 +131,61 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
         tables_frame.grid_columnconfigure(1, weight=1)
 
         # Reorder Alerts (left)
-        ctk.CTkLabel(
-            tables_frame, text="Reorder Alerts (Critical & Warning)",
+        self._lbl_alerts = ctk.CTkLabel(
+            tables_frame, text=t("exec.section.alerts"),
             font=FONT_SUBHEADER, anchor="w",
-        ).grid(row=0, column=0, padx=(0, 10), pady=(0, 3), sticky="w")
+        )
+        self._lbl_alerts.grid(row=0, column=0, padx=(0, 10), pady=(0, 3), sticky="w")
 
         self._alert_table = DataTable(
             tables_frame,
             columns=[
-                {"key": "urgency",            "label": "Status",   "width": 80, "anchor": "center"},
-                {"key": "product_id",         "label": "SKU",      "width": 90},
-                {"key": "product_name",       "label": "Product",  "width": 160},
-                {"key": "current_stock",      "label": "Stock",    "width": 60, "anchor": "e"},
-                {"key": "days_until_stockout","label": "Days Left","width": 70, "anchor": "e"},
-                {"key": "reorder_point",      "label": "ROP",      "width": 55, "anchor": "e"},
+                {"key": "urgency",            "label": t("col.status"),    "width": 80,  "anchor": "center"},
+                {"key": "product_id",         "label": t("col.sku"),       "width": 90},
+                {"key": "product_name",       "label": t("col.product"),   "width": 160},
+                {"key": "current_stock",      "label": t("col.stock"),     "width": 60,  "anchor": "e"},
+                {"key": "days_until_stockout","label": t("col.days_left"), "width": 70,  "anchor": "e"},
+                {"key": "reorder_point",      "label": t("col.rop"),       "width": 55,  "anchor": "e"},
             ],
             height=7,
         )
         self._alert_table.grid(row=1, column=0, padx=(0, 10), sticky="nsew")
 
         # Top Savings (right)
-        ctk.CTkLabel(
-            tables_frame, text="Top EOQ Savings Opportunities",
+        self._lbl_savings = ctk.CTkLabel(
+            tables_frame, text=t("exec.section.savings"),
             font=FONT_SUBHEADER, anchor="w",
-        ).grid(row=0, column=1, padx=(10, 0), pady=(0, 3), sticky="w")
+        )
+        self._lbl_savings.grid(row=0, column=1, padx=(10, 0), pady=(0, 3), sticky="w")
 
         self._savings_table = DataTable(
             tables_frame,
             columns=[
-                {"key": "product_id",       "label": "SKU",       "width": 90},
-                {"key": "product_name",     "label": "Product",   "width": 160},
-                {"key": "eoq",              "label": "EOQ",       "width": 60, "anchor": "e"},
-                {"key": "potential_savings","label": "Savings ($)","width": 90, "anchor": "e"},
-                {"key": "savings_pct",      "label": "Sav %",     "width": 55, "anchor": "e"},
+                {"key": "product_id",        "label": t("col.sku"),            "width": 90},
+                {"key": "product_name",      "label": t("col.product"),        "width": 160},
+                {"key": "eoq",               "label": t("col.eoq"),            "width": 60,  "anchor": "e"},
+                {"key": "potential_savings", "label": t("col.savings_dollar"), "width": 90,  "anchor": "e"},
+                {"key": "savings_pct",       "label": t("col.savings_pct"),    "width": 55,  "anchor": "e"},
             ],
             height=7,
         )
         self._savings_table.grid(row=1, column=1, padx=(10, 0), sticky="nsew")
 
         # ── Top products table ─────────────────────────────────────────
-        ctk.CTkLabel(
-            self._scroll, text="Top Products by Revenue",
+        self._lbl_top_products = ctk.CTkLabel(
+            self._scroll, text=t("exec.section.top_products"),
             font=FONT_SUBHEADER, anchor="w",
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
+        )
+        self._lbl_top_products.pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
 
         self._products_table = DataTable(
             self._scroll,
             columns=[
-                {"key": "id",             "label": "SKU",         "width": 100},
-                {"key": "name",           "label": "Product",     "width": 220},
-                {"key": "category",       "label": "Category",    "width": 110},
-                {"key": "total_revenue",  "label": "Revenue ($)", "width": 120, "anchor": "e"},
-                {"key": "total_quantity", "label": "Units Sold",  "width": 90,  "anchor": "e"},
+                {"key": "id",             "label": t("col.sku"),            "width": 100},
+                {"key": "name",           "label": t("col.product"),        "width": 220},
+                {"key": "category",       "label": t("col.category"),       "width": 110},
+                {"key": "total_revenue",  "label": t("col.revenue_dollar"), "width": 120, "anchor": "e"},
+                {"key": "total_quantity", "label": t("col.units_sold"),     "width": 90,  "anchor": "e"},
             ],
             height=7,
         )
@@ -199,7 +209,6 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
 
     def _reload(self):
         days = int(self._period_var.get())
-        # Update the Revenue KPI card label to reflect the selected period
         self._kpi_cards["revenue"].configure()
 
         try:
@@ -259,7 +268,7 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
         try:
             trend = self._report_data.get("sales_trend", [])
             if not trend:
-                self._trend_chart.plot_line([], [], title="Daily Revenue Trend")
+                self._trend_chart.plot_line([], [], title=t("exec.chart.trend"))
                 return
             step = max(1, len(trend) // 12)
             labels = [
@@ -269,7 +278,7 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
             revenues = [d["total_revenue"] for d in trend]
             self._trend_chart.plot_line(
                 labels, revenues,
-                title="Daily Revenue Trend",
+                title=t("exec.chart.trend"),
                 ylabel="Revenue ($)",
                 color=COLOR_PRIMARY,
             )
@@ -288,11 +297,11 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
             ax.clear()
             if any(v > 0 for v in values):
                 ax.bar(labels, values, color=colors, width=0.5, zorder=3)
-                self._abc_chart._style_axis("Revenue by ABC Class (%)")
+                self._abc_chart._style_axis(t("exec.chart.abc"))
                 self._abc_chart._figure.tight_layout()
                 self._abc_chart._mpl_canvas.draw_idle()
             else:
-                self._abc_chart.plot_bar([], [], title="Revenue by ABC Class (%)")
+                self._abc_chart.plot_bar([], [], title=t("exec.chart.abc"))
         except Exception as e:
             self.logger.error(f"ABC chart error: {e}")
 
@@ -303,7 +312,7 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
             doi = r.get("days_until_stockout")
             display.append({
                 **r,
-                "days_until_stockout": f"{doi:.0f}" if doi is not None else "—",
+                "days_until_stockout": f"{doi:.0f}" if doi is not None else "\u2014",
                 "reorder_point": f"{r.get('reorder_point', 0):.0f}",
             })
         self._alert_table.load_data(display)
@@ -378,5 +387,63 @@ class ExecutiveView(ctk.CTkFrame, LoggerMixin):
             messagebox.showerror("Export Failed",
                                  "Could not write CSV files. Check logs for details.")
 
+    # ------------------------------------------------------------------
+    # Stale / language
+    # ------------------------------------------------------------------
+
     def mark_stale(self):
         self._stale = True
+
+    def update_language(self):
+        """Refresh all translatable text after a language change."""
+        self._lbl_title.configure(text=t("exec.title"))
+        self._lbl_period.configure(text=t("common.period"))
+        self._btn_excel.configure(text=t("common.export_excel"))
+        self._btn_csv.configure(text=t("common.export_csv"))
+        self._lbl_alerts.configure(text=t("exec.section.alerts"))
+        self._lbl_savings.configure(text=t("exec.section.savings"))
+        self._lbl_top_products.configure(text=t("exec.section.top_products"))
+
+        # KPI card labels
+        for key, lbl_key in self._kpi_label_keys.items():
+            self._kpi_cards[key].set_label(t(lbl_key))
+
+        # Alert table column headers
+        _update_tree_headings(self._alert_table, {
+            "urgency":            "col.status",
+            "product_id":         "col.sku",
+            "product_name":       "col.product",
+            "current_stock":      "col.stock",
+            "days_until_stockout":"col.days_left",
+            "reorder_point":      "col.rop",
+        })
+        # Savings table column headers
+        _update_tree_headings(self._savings_table, {
+            "product_id":        "col.sku",
+            "product_name":      "col.product",
+            "eoq":               "col.eoq",
+            "potential_savings": "col.savings_dollar",
+            "savings_pct":       "col.savings_pct",
+        })
+        # Products table column headers
+        _update_tree_headings(self._products_table, {
+            "id":             "col.sku",
+            "name":           "col.product",
+            "category":       "col.category",
+            "total_revenue":  "col.revenue_dollar",
+            "total_quantity": "col.units_sold",
+        })
+        self.mark_stale()
+
+
+# ---------------------------------------------------------------------------
+# Helper
+# ---------------------------------------------------------------------------
+
+def _update_tree_headings(table: DataTable, col_key_map: dict) -> None:
+    """Update Treeview column heading text for each (col_key -> translation_key) pair."""
+    for col_key, trans_key in col_key_map.items():
+        try:
+            table._tree.heading(col_key, text=t(trans_key))
+        except Exception:
+            pass

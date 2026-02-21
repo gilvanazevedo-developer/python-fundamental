@@ -31,6 +31,7 @@ from src.ui.theme import (
     format_percentage,
     format_number,
 )
+from src.i18n import t
 from src.logger import LoggerMixin
 from config.constants import SERVICE_LEVELS, DEFAULT_ORDERING_COST
 
@@ -61,9 +62,8 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
 
         col = 0
 
-        ctk.CTkLabel(controls, text="Category:", font=FONT_SMALL).grid(
-            row=0, column=col, padx=(0, 4), sticky="w"
-        )
+        self._lbl_cat = ctk.CTkLabel(controls, text=t("common.category"), font=FONT_SMALL)
+        self._lbl_cat.grid(row=0, column=col, padx=(0, 4), sticky="w")
         col += 1
         self._cat_var = ctk.StringVar(value="All")
         self._cat_menu = ctk.CTkOptionMenu(
@@ -73,9 +73,8 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
         self._cat_menu.grid(row=0, column=col, padx=(0, 14), sticky="w")
         col += 1
 
-        ctk.CTkLabel(controls, text="History (days):", font=FONT_SMALL).grid(
-            row=0, column=col, padx=(0, 4), sticky="w"
-        )
+        self._lbl_history = ctk.CTkLabel(controls, text=t("common.history_days"), font=FONT_SMALL)
+        self._lbl_history.grid(row=0, column=col, padx=(0, 4), sticky="w")
         col += 1
         self._period_var = ctk.StringVar(value="90")
         ctk.CTkOptionMenu(
@@ -84,9 +83,8 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
         ).grid(row=0, column=col, padx=(0, 14), sticky="w")
         col += 1
 
-        ctk.CTkLabel(controls, text="Ordering cost ($):", font=FONT_SMALL).grid(
-            row=0, column=col, padx=(0, 4), sticky="w"
-        )
+        self._lbl_ordering_cost = ctk.CTkLabel(controls, text=t("opt.label.ordering_cost"), font=FONT_SMALL)
+        self._lbl_ordering_cost.grid(row=0, column=col, padx=(0, 4), sticky="w")
         col += 1
         self._ordering_cost_var = ctk.StringVar(value=str(int(DEFAULT_ORDERING_COST)))
         self._ordering_cost_entry = ctk.CTkEntry(
@@ -95,9 +93,8 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
         self._ordering_cost_entry.grid(row=0, column=col, padx=(0, 14), sticky="w")
         col += 1
 
-        ctk.CTkLabel(controls, text="Service level:", font=FONT_SMALL).grid(
-            row=0, column=col, padx=(0, 4), sticky="w"
-        )
+        self._lbl_service_level = ctk.CTkLabel(controls, text=t("opt.label.service_level"), font=FONT_SMALL)
+        self._lbl_service_level.grid(row=0, column=col, padx=(0, 4), sticky="w")
         col += 1
         self._svc_var = ctk.StringVar(value="95% (Z=1.65)")
         ctk.CTkOptionMenu(
@@ -107,32 +104,36 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
         ).grid(row=0, column=col, padx=(0, 14), sticky="w")
         col += 1
 
-        ctk.CTkButton(
-            controls, text="Refresh", width=90, height=28,
+        self._btn_refresh = ctk.CTkButton(
+            controls, text=t("common.refresh"), width=90, height=28,
             command=self._reload,
-        ).grid(row=0, column=col, sticky="w")
+        )
+        self._btn_refresh.grid(row=0, column=col, sticky="w")
 
         # ── Summary KPI cards ──────────────────────────────────────────
-        ctk.CTkLabel(
-            self._scroll, text="Cost Optimisation Summary",
+        self._lbl_summary = ctk.CTkLabel(
+            self._scroll, text=t("opt.section.summary"),
             font=FONT_SUBHEADER, anchor="w",
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(10, 3))
+        )
+        self._lbl_summary.pack(fill="x", padx=SECTION_PADDING, pady=(10, 3))
 
         kpi_frame = ctk.CTkFrame(self._scroll, fg_color="transparent")
         kpi_frame.pack(fill="x", padx=SECTION_PADDING, pady=(0, 10))
 
         kpi_defs = [
-            ("current_cost",  "Current Annual Cost",    COLOR_DANGER),
-            ("optimal_cost",  "Optimal Annual Cost",    COLOR_SUCCESS),
-            ("savings",       "Potential Savings",      COLOR_WARNING),
-            ("skus_optimized","SKUs w/ Savings",        COLOR_PRIMARY),
+            ("current_cost",   "opt.kpi.current_cost", COLOR_DANGER),
+            ("optimal_cost",   "opt.kpi.optimal_cost", COLOR_SUCCESS),
+            ("savings",        "opt.kpi.savings",      COLOR_WARNING),
+            ("skus_optimized", "opt.kpi.skus_savings", COLOR_PRIMARY),
         ]
         self._kpi_cards: dict[str, KPICard] = {}
-        for i, (key, label, color) in enumerate(kpi_defs):
-            card = KPICard(kpi_frame, label=label, value="--", color=color)
+        self._kpi_label_keys: dict[str, str] = {}
+        for i, (key, lbl_key, color) in enumerate(kpi_defs):
+            card = KPICard(kpi_frame, label=t(lbl_key), value="--", color=color)
             card.grid(row=0, column=i, padx=5, pady=5, sticky="nsew")
             kpi_frame.grid_columnconfigure(i, weight=1)
             self._kpi_cards[key] = card
+            self._kpi_label_keys[key] = lbl_key
 
         # ── Charts row ─────────────────────────────────────────────────
         charts_frame = ctk.CTkFrame(self._scroll, fg_color="transparent")
@@ -147,27 +148,28 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
         self._cost_chart.grid(row=0, column=1, padx=(5, 0), pady=5, sticky="nsew")
 
         # ── Detail table ───────────────────────────────────────────────
-        ctk.CTkLabel(
-            self._scroll, text="Per-Product Optimisation Detail",
+        self._lbl_detail = ctk.CTkLabel(
+            self._scroll, text=t("opt.section.detail"),
             font=FONT_SUBHEADER, anchor="w",
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
+        )
+        self._lbl_detail.pack(fill="x", padx=SECTION_PADDING, pady=(5, 3))
 
         self._detail_table = DataTable(
             self._scroll,
             columns=[
-                {"key": "product_id",       "label": "SKU",          "width": 100},
-                {"key": "product_name",     "label": "Product",      "width": 200},
-                {"key": "category",         "label": "Category",     "width": 110},
-                {"key": "current_stock",    "label": "Stock",        "width": 70,  "anchor": "e"},
-                {"key": "eoq",              "label": "EOQ",          "width": 70,  "anchor": "e"},
-                {"key": "reorder_point",    "label": "ROP",          "width": 70,  "anchor": "e"},
-                {"key": "safety_stock",     "label": "Safety Stk",   "width": 80,  "anchor": "e"},
-                {"key": "orders_per_year",  "label": "Orders/Yr",    "width": 80,  "anchor": "e"},
-                {"key": "eoq_total_cost",   "label": "Opt Cost ($)", "width": 100, "anchor": "e"},
-                {"key": "current_total_cost","label": "Curr Cost ($)","width": 100, "anchor": "e"},
-                {"key": "potential_savings","label": "Savings ($)",  "width": 95,  "anchor": "e"},
-                {"key": "savings_pct",      "label": "Sav %",        "width": 65,  "anchor": "e"},
-                {"key": "recommendation",   "label": "Recommendation","width": 260},
+                {"key": "product_id",        "label": t("col.sku"),            "width": 100},
+                {"key": "product_name",      "label": t("col.product"),        "width": 200},
+                {"key": "category",          "label": t("col.category"),       "width": 110},
+                {"key": "current_stock",     "label": t("col.stock"),          "width": 70,  "anchor": "e"},
+                {"key": "eoq",               "label": t("col.eoq"),            "width": 70,  "anchor": "e"},
+                {"key": "reorder_point",     "label": t("col.rop"),            "width": 70,  "anchor": "e"},
+                {"key": "safety_stock",      "label": t("col.safety_stk"),     "width": 80,  "anchor": "e"},
+                {"key": "orders_per_year",   "label": t("col.orders_yr"),      "width": 80,  "anchor": "e"},
+                {"key": "eoq_total_cost",    "label": t("col.opt_cost"),       "width": 100, "anchor": "e"},
+                {"key": "current_total_cost","label": t("col.curr_cost"),      "width": 100, "anchor": "e"},
+                {"key": "potential_savings", "label": t("col.savings_dollar"), "width": 95,  "anchor": "e"},
+                {"key": "savings_pct",       "label": t("col.savings_pct"),    "width": 65,  "anchor": "e"},
+                {"key": "recommendation",    "label": t("col.recommendation"), "width": 260},
             ],
             height=14,
         )
@@ -260,7 +262,7 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
             labels = [r["category"] for r in by_cat[:10]]
             values = [r["potential_savings"] for r in by_cat[:10]]
             self._savings_chart.plot_horizontal_bar(
-                labels, values, title="Potential Savings by Category ($)",
+                labels, values, title=t("opt.chart.savings"),
                 color=COLOR_WARNING,
             )
         except Exception as e:
@@ -269,7 +271,7 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
     def _update_cost_chart(self, summary: dict):
         """Bar chart: current vs optimal total annual cost."""
         try:
-            labels = ["Current Cost", "Optimal Cost"]
+            labels = [t("opt.kpi.current_cost"), t("opt.kpi.optimal_cost")]
             values = [
                 summary.get("total_current_cost", 0),
                 summary.get("total_optimal_cost", 0),
@@ -279,11 +281,11 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
             ax.clear()
             if any(v > 0 for v in values):
                 ax.bar(labels, values, color=colors, width=0.5, zorder=3)
-                self._cost_chart._style_axis("Annual Inventory Cost ($)")
+                self._cost_chart._style_axis(t("opt.chart.cost"))
                 self._cost_chart._figure.tight_layout()
                 self._cost_chart._mpl_canvas.draw_idle()
             else:
-                self._cost_chart.plot_bar([], [], title="Annual Inventory Cost ($)")
+                self._cost_chart.plot_bar([], [], title=t("opt.chart.cost"))
         except Exception as e:
             self.logger.error(f"Cost chart error: {e}")
 
@@ -305,3 +307,42 @@ class OptimizationView(ctk.CTkFrame, LoggerMixin):
 
     def mark_stale(self):
         self._stale = True
+
+    def update_language(self):
+        """Refresh all translatable text after a language change."""
+        self._lbl_cat.configure(text=t("common.category"))
+        self._lbl_history.configure(text=t("common.history_days"))
+        self._lbl_ordering_cost.configure(text=t("opt.label.ordering_cost"))
+        self._lbl_service_level.configure(text=t("opt.label.service_level"))
+        self._btn_refresh.configure(text=t("common.refresh"))
+        self._lbl_summary.configure(text=t("opt.section.summary"))
+        self._lbl_detail.configure(text=t("opt.section.detail"))
+
+        for key, lbl_key in self._kpi_label_keys.items():
+            self._kpi_cards[key].set_label(t(lbl_key))
+
+        _update_tree_headings(self._detail_table, {
+            "product_id":        "col.sku",
+            "product_name":      "col.product",
+            "category":          "col.category",
+            "current_stock":     "col.stock",
+            "eoq":               "col.eoq",
+            "reorder_point":     "col.rop",
+            "safety_stock":      "col.safety_stk",
+            "orders_per_year":   "col.orders_yr",
+            "eoq_total_cost":    "col.opt_cost",
+            "current_total_cost":"col.curr_cost",
+            "potential_savings": "col.savings_dollar",
+            "savings_pct":       "col.savings_pct",
+            "recommendation":    "col.recommendation",
+        })
+        self.mark_stale()
+
+
+def _update_tree_headings(table, col_key_map: dict) -> None:
+    from src.i18n import t as _t
+    for col_key, trans_key in col_key_map.items():
+        try:
+            table._tree.heading(col_key, text=_t(trans_key))
+        except Exception:
+            pass
