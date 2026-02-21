@@ -29,6 +29,7 @@ from src.ui.views.import_view import ImportView
 from src.ui.views.analytics_view import AnalyticsView
 from src.ui.views.forecast_view import ForecastView
 from src.ui.views.optimization_view import OptimizationView
+from src.ui.views.executive_view import ExecutiveView
 from src.ui.components.status_bar import StatusBar
 from src.logger import LoggerMixin
 
@@ -62,7 +63,7 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         self._build_status_bar()
 
         # Show default view
-        self._switch_view("dashboard")
+        self._switch_view("executive")
 
         self.logger.info("Application started")
 
@@ -99,6 +100,7 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
 
         # Navigation buttons
         nav_items = [
+            ("executive",     "Executive"),
             ("dashboard",     "Dashboard"),
             ("inventory",     "Inventory"),
             ("analytics",     "Analytics"),
@@ -148,6 +150,7 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         self._content_frame.grid_rowconfigure(0, weight=1)
         self._content_frame.grid_columnconfigure(0, weight=1)
 
+        self._views["executive"]    = ExecutiveView(self._content_frame)
         self._views["dashboard"]    = DashboardView(self._content_frame)
         self._views["inventory"]    = InventoryView(self._content_frame)
         self._views["analytics"]    = AnalyticsView(self._content_frame)
@@ -210,3 +213,6 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         optimization = self._views.get("optimization")
         if optimization:
             optimization.mark_stale()
+        executive = self._views.get("executive")
+        if executive:
+            executive.mark_stale()
