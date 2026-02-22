@@ -1,0 +1,25 @@
+# Logistics DSS Dependencies
+
+# Phase 1 - Data Processing
+pandas>=2.0.0
+openpyxl>=3.1.0
+sqlalchemy>=2.0.0
+python-dotenv>=1.0.0
+
+# Phase 2 - Dashboard UI
+customtkinter>=5.2.0
+matplotlib>=3.7.0
+babel>=2.12.0
+
+# Phase 8 - Authentication & Scheduling
+passlib[bcrypt]>=1.7.4
+apscheduler>=3.10
+
+# Testing
+pytest>=8.0.0
+pytest-cov>=4.0.0
+
+# Development (optional)
+black>=23.0.0
+isort>=5.12.0
+mypy>=1.0.0

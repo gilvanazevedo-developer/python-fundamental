@@ -31,15 +31,22 @@ from src.ui.views.analytics_view import AnalyticsView
 from src.ui.views.forecast_view import ForecastView
 from src.ui.views.optimization_view import OptimizationView
 from src.ui.views.executive_view import ExecutiveView
+from src.ui.views.settings_view import SettingsView
+from src.ui.views.import_wizard_view import ImportWizardView
+from src.ui.views.audit_log_view import AuditLogView
 from src.ui.components.status_bar import StatusBar
 from src.logger import LoggerMixin
+from src.services.scheduler_service import SchedulerService, get_update_queue
+from config.constants import ROLE_ADMIN, ROLE_BUYER, SCHEDULER_QUEUE_POLL_MS
 
 
 class LogisticsDSSApp(ctk.CTk, LoggerMixin):
     """Main application window."""
 
-    def __init__(self):
+    def __init__(self, current_user=None):
         super().__init__()
+
+        self.current_user = current_user
 
         # Configure window
         self.title(settings.WINDOW_TITLE)
@@ -51,6 +58,9 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
 
         # Initialize database
         self._init_database()
+
+        # Phase 8: initialize scheduler before building views
+        self._scheduler = SchedulerService()
 
         # State
         self._current_view_name = None
@@ -65,6 +75,13 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
 
         # Show default view
         self._switch_view("executive")
+
+        # Start scheduler and begin queue polling
+        try:
+            self._scheduler.start()
+        except Exception as exc:
+            self.logger.warning(f"Scheduler start failed: {exc}")
+        self._poll_scheduler_queue()
 
         self.logger.info("Application started")
 
@@ -100,6 +117,7 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         title_label.pack(pady=(25, 30), padx=10)
 
         # Navigation buttons
+        role = self.current_user.role if self.current_user else None
         nav_items = [
             ("executive",    "nav.executive"),
             ("dashboard",    "nav.dashboard"),
@@ -109,6 +127,14 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
             ("optimization", "nav.optimization"),
             ("import",       "nav.import"),
         ]
+        # Phase 8 admin-only nav entries
+        if role == ROLE_ADMIN:
+            nav_items += [
+                ("import_wizard", "nav.import_wizard"),
+                ("settings",      "nav.settings"),
+                ("audit_log",     "nav.audit_log"),
+            ]
+
         self._nav_label_keys = {v: k for v, k in nav_items}
 
         for view_name, lbl_key in nav_items:
@@ -180,6 +206,18 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         self._views["import"]       = ImportView(
             self._content_frame, on_import_complete=self._on_import_complete
         )
+        # Phase 8 views
+        self._views["import_wizard"] = ImportWizardView(
+            self._content_frame, current_user=self.current_user
+        )
+        self._views["settings"] = SettingsView(
+            self._content_frame,
+            current_user=self.current_user,
+            scheduler=self._scheduler if hasattr(self, "_scheduler") else None,
+        )
+        self._views["audit_log"] = AuditLogView(
+            self._content_frame, current_user=self.current_user
+        )
 
         for view in self._views.values():
             view.grid(row=0, column=0, sticky="nsew")
@@ -243,21 +281,30 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
         """Called after a successful import to refresh other views."""
         self._status_bar.refresh()
         # Mark data views for refresh on next switch
-        dashboard = self._views.get("dashboard")
-        if dashboard:
-            dashboard.mark_stale()
-        inventory = self._views.get("inventory")
-        if inventory:
-            inventory.mark_stale()
-        analytics = self._views.get("analytics")
-        if analytics:
-            analytics.mark_stale()
-        forecasting = self._views.get("forecasting")
-        if forecasting:
-            forecasting.mark_stale()
-        optimization = self._views.get("optimization")
-        if optimization:
-            optimization.mark_stale()
-        executive = self._views.get("executive")
-        if executive:
-            executive.mark_stale()
+        for view_name in ("dashboard", "inventory", "analytics", "forecasting", "optimization", "executive"):
+            view = self._views.get(view_name)
+            if view:
+                view.mark_stale()
+
+    def _poll_scheduler_queue(self):
+        """Main-thread poll of the scheduler notification queue every SCHEDULER_QUEUE_POLL_MS."""
+        q = get_update_queue()
+        try:
+            while not q.empty():
+                msg = q.get_nowait()
+                self.logger.debug(f"Scheduler notification: {msg}")
+                settings_view = self._views.get("settings")
+                if settings_view and hasattr(settings_view, "refresh_schedule_list"):
+                    settings_view.refresh_schedule_list()
+        except Exception:
+            pass
+        self.after(SCHEDULER_QUEUE_POLL_MS, self._poll_scheduler_queue)
+
+    def destroy(self):
+        """Shut down the scheduler before destroying the window."""
+        try:
+            if hasattr(self, "_scheduler") and self._scheduler:
+                self._scheduler.stop()
+        except Exception:
+            pass
+        super().destroy()

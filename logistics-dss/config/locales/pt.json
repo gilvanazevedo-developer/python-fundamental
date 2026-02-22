@@ -10,6 +10,9 @@
   "nav.forecasting":  "Previs\u00e3o",
   "nav.optimization": "Otimiza\u00e7\u00e3o",
   "nav.import":       "Importar Dados",
+  "nav.import_wizard": "Assistente de Import.",
+  "nav.settings":     "Configura\u00e7\u00f5es",
+  "nav.audit_log":    "Log de Auditoria",
 
   "common.refresh":       "Atualizar",
   "common.category":      "Categoria:",

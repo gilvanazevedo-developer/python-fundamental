@@ -116,3 +116,38 @@ SERVICE_LEVELS = {                   # Available service levels for UI selector
     "95% (Z=1.65)": 1.65,
     "99% (Z=2.33)": 2.33,
 }
+
+# Authentication & RBAC (Phase 8)
+MAX_LOGIN_ATTEMPTS = 5               # Failed login attempts before account lockout
+ROLE_ADMIN = "ADMIN"                 # Full system access including user management
+ROLE_BUYER = "BUYER"                 # Full PO workflow; no system configuration
+ROLE_VIEWER = "VIEWER"               # Read-only access across all views
+ALL_ROLES = ("ADMIN", "BUYER", "VIEWER")
+BCRYPT_ROUNDS = 10                   # bcrypt work factor (~150 ms on typical hardware)
+DEFAULT_ADMIN_USERNAME = "admin"
+DEFAULT_ADMIN_PASSWORD = "admin123"  # Hashed on creation; must be changed after first login
+
+# Audit (Phase 8)
+AUDIT_RETENTION_DAYS = 365           # Events older than this are pruned by weekly APScheduler job
+AUDIT_PRUNE_CRON = "0 2 * * 0"      # Weekly Sunday 02:00 UTC
+
+# Scheduler (Phase 8)
+MIN_SCHEDULE_INTERVAL_SECONDS = 3600  # Minimum 1 hour between scheduled report runs
+SCHEDULER_QUEUE_POLL_MS = 2000        # Main-thread poll interval for scheduler notifications
+
+# Settings (Phase 8)
+SETTINGS_FILE_PATH = "config/settings.json"
+SETTINGS_DEFAULTS: Dict = {
+    "db_path":                    "data/logistics.db",
+    "log_level":                  "INFO",
+    "export_dir":                 "exports/",
+    "theme":                      "dark",
+    "language":                   "en",
+    "audit_retention_days":       365,
+    "min_schedule_interval_hours": 1,
+}
+
+# Import Wizard types (Phase 8)
+IMPORT_TYPE_PRODUCTS = "PRODUCTS"
+IMPORT_TYPE_DEMAND = "DEMAND"
+IMPORT_TYPE_SUPPLIERS = "SUPPLIERS"

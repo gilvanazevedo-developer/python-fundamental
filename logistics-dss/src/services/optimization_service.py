@@ -27,6 +27,8 @@ from config.constants import (
     DEFAULT_LEAD_TIME_DAYS,
     DEFAULT_ORDERING_COST,
     SERVICE_LEVEL_Z,
+    ROLE_ADMIN,
+    ROLE_BUYER,
 )
 
 
@@ -298,3 +300,40 @@ class OptimizationService(LoggerMixin):
                 .all()
             )
             return [r.category for r in rows]
+
+    def run_optimization(
+        self,
+        category: Optional[str] = None,
+        days: int = None,
+        ordering_cost: float = None,
+        service_level_z: float = None,
+    ) -> Dict[str, Any]:
+        """
+        RBAC-protected entry point for running EOQ optimisation.
+
+        Requires BUYER or ADMIN role. Emits an OPTIMIZATION_RUN audit event.
+        Returns the same summary dict as get_optimization_summary().
+
+        Raises:
+            PermissionDeniedError: if the current user lacks the required role.
+        """
+        # Import lazily to avoid circular imports at module load time.
+        from src.services.auth_service import AuthService, PermissionDeniedError
+        from src.services.audit_service import AuditService
+
+        AuthService.require_role(ROLE_BUYER, ROLE_ADMIN)
+
+        summary = self.get_optimization_summary(
+            category=category, days=days,
+            ordering_cost=ordering_cost, service_level_z=service_level_z,
+        )
+
+        user = AuthService.get_current_user()
+        actor = user.username if user else "system"
+        AuditService().log(
+            "OPTIMIZATION_RUN",
+            actor=actor,
+            detail={"product_count": summary.get("total_products", 0)},
+        )
+
+        return summary

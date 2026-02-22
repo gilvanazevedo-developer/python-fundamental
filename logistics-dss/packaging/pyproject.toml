@@ -1,0 +1,51 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "logistics-dss"
+version = "1.0.0"
+description = "Logistics Decision Support System — desktop inventory management application"
+authors = [{ name = "Gilvan de Azevedo" }]
+requires-python = ">=3.12"
+license = { text = "Proprietary" }
+keywords = ["logistics", "inventory", "dss", "demand-forecasting", "eoq"]
+dependencies = [
+    "customtkinter>=5.2",
+    "sqlalchemy>=2.0",
+    "pandas>=2.1",
+    "numpy>=1.26",
+    "matplotlib>=3.8",
+    "openpyxl>=3.1",
+    "bcrypt>=4.0",
+    "apscheduler>=3.10",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "black>=23.0",
+    "isort>=5.12",
+    "mypy>=1.0",
+]
+
+[project.scripts]
+logistics-dss = "main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["src*", "config*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=short -q"
+
+[tool.black]
+line-length = 100
+target-version = ["py312"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
