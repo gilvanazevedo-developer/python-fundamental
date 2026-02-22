@@ -38,6 +38,7 @@ from src.ui.components.status_bar import StatusBar
 from src.logger import LoggerMixin
 from src.services.scheduler_service import SchedulerService, get_update_queue
 from config.constants import ROLE_ADMIN, ROLE_BUYER, SCHEDULER_QUEUE_POLL_MS
+from src.services import translation_service as _ts
 
 
 class LogisticsDSSApp(ctk.CTk, LoggerMixin):
@@ -255,8 +256,10 @@ class LogisticsDSSApp(ctk.CTk, LoggerMixin):
 
     def _change_language(self, choice: str):
         """Switch the active UI language and refresh all views."""
-        lang_map = {"English": "en", "Português": "pt", "Español": "es"}
-        set_language(lang_map.get(choice, "en"))
+        # Map display names to gettext locale codes used by TranslationService.
+        # switch_language() also syncs the legacy JSON-based src.i18n system.
+        lang_map = {"English": "en", "Português": "pt_BR", "Español": "es"}
+        _ts.switch_language(lang_map.get(choice, "en"))
 
         # Update sidebar labels
         self._lbl_appearance.configure(text=t("app.appearance"))

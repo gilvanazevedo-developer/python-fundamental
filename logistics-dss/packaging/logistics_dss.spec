@@ -19,6 +19,10 @@ a = Analysis(
     datas=[
         # Config and locale files must be available at runtime
         ("../config/",   "config/"),
+        # gettext .mo catalogs — one entry per locale/language
+        ("../locale/en/LC_MESSAGES/logistics_dss.mo",    "locale/en/LC_MESSAGES/"),
+        ("../locale/pt_BR/LC_MESSAGES/logistics_dss.mo", "locale/pt_BR/LC_MESSAGES/"),
+        ("../locale/es/LC_MESSAGES/logistics_dss.mo",    "locale/es/LC_MESSAGES/"),
         # CustomTkinter requires its theme JSON files to be bundled explicitly
         (str(Path(sys.prefix) / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages" / "customtkinter"),
          "customtkinter"),

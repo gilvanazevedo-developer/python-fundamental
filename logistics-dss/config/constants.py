@@ -151,3 +151,12 @@ SETTINGS_DEFAULTS: Dict = {
 IMPORT_TYPE_PRODUCTS = "PRODUCTS"
 IMPORT_TYPE_DEMAND = "DEMAND"
 IMPORT_TYPE_SUPPLIERS = "SUPPLIERS"
+
+# Internationalisation (Phase 9)
+SUPPORTED_LANGUAGES    = ("en", "pt_BR", "es")
+LANGUAGE_DISPLAY_NAMES = {"en": "English", "pt_BR": "Português", "es": "Español"}
+# Mapping from gettext locale code to the JSON-based src.i18n locale code
+LANGUAGE_TO_I18N_CODE  = {"en": "en", "pt_BR": "pt", "es": "es"}
+DEFAULT_LANGUAGE        = "en"
+LOCALE_DIR              = "locale"
+I18N_DOMAIN             = "logistics_dss"

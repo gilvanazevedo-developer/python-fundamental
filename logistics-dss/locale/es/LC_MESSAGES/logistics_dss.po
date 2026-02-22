@@ -1,0 +1,547 @@
+# Logistics DSS — Español
+# Copyright (C) 2026 Gilvan de Azevedo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Logistics DSS 1.0.0\n"
+"PO-Revision-Date: 2026-02-22 09:00+0000\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Navigation
+msgid "Executive"
+msgstr "Ejecutivo"
+
+msgid "Dashboard"
+msgstr "Panel de Control"
+
+msgid "Inventory"
+msgstr "Inventario"
+
+msgid "Analytics"
+msgstr "Análisis"
+
+msgid "Forecasting"
+msgstr "Pronóstico de Demanda"
+
+msgid "Optimisation"
+msgstr "Optimización"
+
+msgid "Import Data"
+msgstr "Importar Datos"
+
+msgid "Import Wizard"
+msgstr "Asistente de Importación"
+
+msgid "Settings"
+msgstr "Configuración"
+
+msgid "Audit Log"
+msgstr "Registro de Auditoría"
+
+msgid "Reports"
+msgstr "Informes"
+
+msgid "Suppliers"
+msgstr "Proveedores"
+
+msgid "Purchase Orders"
+msgstr "Órdenes de Compra"
+
+# App frame labels
+msgid "Appearance:"
+msgstr "Apariencia:"
+
+msgid "Language:"
+msgstr "Idioma:"
+
+# Common controls
+msgid "Refresh"
+msgstr "Actualizar"
+
+msgid "Category:"
+msgstr "Categoría:"
+
+msgid "Period:"
+msgstr "Período:"
+
+msgid "History (days):"
+msgstr "Historial (días):"
+
+msgid "Horizon (days):"
+msgstr "Horizonte (días):"
+
+msgid "Method:"
+msgstr "Método:"
+
+msgid "Export Excel"
+msgstr "Exportar Excel"
+
+msgid "Export CSV"
+msgstr "Exportar CSV"
+
+# Buttons
+msgid "Log In"
+msgstr "Iniciar Sesión"
+
+msgid "Authenticating\u2026"
+msgstr "Autenticando\u2026"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Save Settings"
+msgstr "Guardar Configuración"
+
+msgid "Reset to Defaults"
+msgstr "Restaurar Valores Predeterminados"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Confirm"
+msgstr "Confirmar"
+
+msgid "Submit"
+msgstr "Enviar"
+
+msgid "Receive"
+msgstr "Recibir"
+
+msgid "Search"
+msgstr "Buscar"
+
+msgid "Create"
+msgstr "Crear"
+
+msgid "Deactivate"
+msgstr "Desactivar"
+
+msgid "Back"
+msgstr "Atrás"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Browse\u2026"
+msgstr "Examinar\u2026"
+
+msgid "Run Import"
+msgstr "Ejecutar Importación"
+
+msgid "+ Add Schedule"
+msgstr "+ Agregar Programación"
+
+msgid "+ Add User"
+msgstr "+ Agregar Usuario"
+
+msgid "Create User"
+msgstr "Crear Usuario"
+
+# DataTable column headers
+msgid "SKU"
+msgstr "SKU"
+
+msgid "Product"
+msgstr "Producto"
+
+msgid "Product Name"
+msgstr "Nombre del Producto"
+
+msgid "Category"
+msgstr "Categoría"
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Days Left"
+msgstr "Días Rest."
+
+msgid "ROP"
+msgstr "PPR"
+
+msgid "EOQ"
+msgstr "CEP"
+
+msgid "Safety Stk."
+msgstr "Stock Seg."
+
+msgid "Urgency"
+msgstr "Urgencia"
+
+msgid "Avg/Day"
+msgstr "Prom/Día"
+
+msgid "Fcst/Day"
+msgstr "Prev/Día"
+
+msgid "Revenue ($)"
+msgstr "Ingresos ($)"
+
+msgid "Units Sold"
+msgstr "Unid. Vend."
+
+msgid "Savings ($)"
+msgstr "Ahorro ($)"
+
+msgid "Savings %"
+msgstr "Ahorro %"
+
+msgid "Unit Cost"
+msgstr "Costo Unit."
+
+msgid "Unit Price"
+msgstr "Precio Unit."
+
+msgid "Stock Value"
+msgstr "Valor Stock"
+
+msgid "Rev. %"
+msgstr "% Ing."
+
+msgid "Cumul. %"
+msgstr "% Acum."
+
+msgid "Turnover"
+msgstr "Rotación"
+
+msgid "DOI"
+msgstr "DIA"
+
+msgid "Class"
+msgstr "Clase"
+
+msgid "Orders/Yr"
+msgstr "Pedidos/Año"
+
+msgid "Opt. Cost ($)"
+msgstr "Costo Ópt. ($)"
+
+msgid "Curr. Cost ($)"
+msgstr "Costo Act. ($)"
+
+msgid "Recommendation"
+msgstr "Recomendación"
+
+msgid "Timestamp"
+msgstr "Fecha/Hora"
+
+msgid "Event Type"
+msgstr "Tipo de Evento"
+
+msgid "Actor"
+msgstr "Actor"
+
+msgid "Entity"
+msgstr "Entidad"
+
+msgid "Detail"
+msgstr "Detalle"
+
+msgid "Username"
+msgstr "Usuario"
+
+msgid "Display Name"
+msgstr "Nombre de Pantalla"
+
+msgid "Role"
+msgstr "Rol"
+
+msgid "Active"
+msgstr "Activo"
+
+msgid "Last Login"
+msgstr "Último Acceso"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Format"
+msgstr "Formato"
+
+msgid "Cron"
+msgstr "Cron"
+
+msgid "Last Run"
+msgstr "Última Ejecución"
+
+msgid "Next Run"
+msgstr "Próxima Ejecución"
+
+# View titles and section headers
+msgid "Executive Dashboard"
+msgstr "Panel Ejecutivo"
+
+msgid "Reorder Alerts (Critical and Warning)"
+msgstr "Alertas de Reposición (Crítico y Advertencia)"
+
+msgid "Top EOQ Savings Opportunities"
+msgstr "Principales Oportunidades de Ahorro CEP"
+
+msgid "Top Revenue Products"
+msgstr "Productos con Mayores Ingresos"
+
+msgid "Low Stock Alerts"
+msgstr "Alertas de Stock Bajo"
+
+msgid "Inventory Value by Category"
+msgstr "Valor del Inventario por Categoría"
+
+msgid "Daily Sales Revenue"
+msgstr "Ingresos de Ventas Diarias"
+
+msgid "Select a product to view details"
+msgstr "Seleccione un producto para ver detalles"
+
+msgid "ABC Classification \u2014 Class Summary"
+msgstr "Clasificación ABC \u2014 Resumen de Clases"
+
+msgid "Product Classification Detail"
+msgstr "Detalle de Clasificación por Producto"
+
+msgid "Class A \u2014 High Value"
+msgstr "Clase A \u2014 Alto Valor"
+
+msgid "Class B \u2014 Medium Value"
+msgstr "Clase B \u2014 Valor Medio"
+
+msgid "Class C \u2014 Low Value"
+msgstr "Clase C \u2014 Bajo Valor"
+
+msgid "Demand Overview"
+msgstr "Resumen de Demanda"
+
+msgid "Product Demand Forecast"
+msgstr "Pronóstico de Demanda del Producto"
+
+msgid "Reorder Recommendations"
+msgstr "Recomendaciones de Reposición"
+
+msgid "Select a product row below to view its forecast chart."
+msgstr "Seleccione una fila de producto a continuación para ver su gráfico de pronóstico."
+
+msgid "Cost Optimisation Summary"
+msgstr "Resumen de Optimización de Costos"
+
+msgid "Per-Product Optimisation Detail"
+msgstr "Detalle de Optimización por Producto"
+
+msgid "GENERAL"
+msgstr "GENERAL"
+
+msgid "SCHEDULED REPORTS"
+msgstr "INFORMES PROGRAMADOS"
+
+msgid "USER MANAGEMENT"
+msgstr "GESTIÓN DE USUARIOS"
+
+msgid "Showing 200 most recent events"
+msgstr "Mostrando 200 eventos más recientes"
+
+msgid "Decision Support System"
+msgstr "Sistema de Apoyo a la Decisión"
+
+# KPI card labels
+msgid "Revenue"
+msgstr "Ingresos"
+
+msgid "Inventory Value"
+msgstr "Valor del Inventario"
+
+msgid "Carrying Cost/Month"
+msgstr "Costo de Mantenimiento/Mes"
+
+msgid "Stockout Rate"
+msgstr "Tasa de Quiebre de Stock"
+
+msgid "EOQ Pot. Savings"
+msgstr "Ahorro Pot. CEP"
+
+msgid "Fill Rate"
+msgstr "Tasa de Servicio"
+
+msgid "Total SKUs"
+msgstr "Total SKUs"
+
+msgid "Total Units"
+msgstr "Total Unidades"
+
+msgid "Days of Supply"
+msgstr "Días de Suministro"
+
+msgid "Carrying Cost"
+msgstr "Costo de Mantenimiento"
+
+msgid "Products"
+msgstr "Productos"
+
+msgid "Revenue Share"
+msgstr "Participación en Ingresos"
+
+msgid "Critical SKUs"
+msgstr "SKUs Críticos"
+
+msgid "Warning SKUs"
+msgstr "SKUs en Advertencia"
+
+msgid "On Track SKUs"
+msgstr "SKUs en Plazo"
+
+msgid "No Demand SKUs"
+msgstr "SKUs Sin Demanda"
+
+msgid "Current Annual Cost"
+msgstr "Costo Anual Actual"
+
+msgid "Optimal Annual Cost"
+msgstr "Costo Anual Óptimo"
+
+msgid "Potential Savings"
+msgstr "Ahorro Potencial"
+
+msgid "SKUs w/ Savings"
+msgstr "SKUs c/ Ahorro"
+
+# Chart titles
+msgid "Daily Revenue Trend"
+msgstr "Tendencia de Ingresos Diarios"
+
+msgid "Revenue by ABC Class (%)"
+msgstr "Ingresos por Clase ABC (%)"
+
+msgid "Revenue by ABC Class ($)"
+msgstr "Ingresos por Clase ABC ($)"
+
+msgid "Products by ABC Class"
+msgstr "Productos por Clase ABC"
+
+msgid "Potential Savings by Category ($)"
+msgstr "Ahorro Potencial por Categoría ($)"
+
+msgid "Annual Inventory Cost ($)"
+msgstr "Costo Anual de Inventario ($)"
+
+# Form / modal field labels
+msgid "Log level:"
+msgstr "Nivel de log:"
+
+msgid "Theme:"
+msgstr "Tema:"
+
+msgid "Export dir:"
+msgstr "Directorio de exportación:"
+
+msgid "Ordering cost ($):"
+msgstr "Costo de pedido ($):"
+
+msgid "Service level:"
+msgstr "Nivel de servicio:"
+
+msgid "Event Type:"
+msgstr "Tipo de Evento:"
+
+msgid "Actor:"
+msgstr "Actor:"
+
+msgid "Report Type"
+msgstr "Tipo de Informe"
+
+msgid "Cron (5-field)"
+msgstr "Cron (5 campos)"
+
+msgid "Output Dir"
+msgstr "Directorio de Salida"
+
+msgid "Password"
+msgstr "Contraseña"
+
+# Modal titles
+msgid "Add Schedule"
+msgstr "Agregar Programación"
+
+msgid "Add User"
+msgstr "Agregar Usuario"
+
+# Error and validation messages
+msgid "Invalid username or password."
+msgstr "Usuario o contraseña inválidos."
+
+msgid "Please enter your username."
+msgstr "Por favor, ingrese su nombre de usuario."
+
+msgid "Account locked. Contact your administrator."
+msgstr "Cuenta bloqueada. Contacte al administrador."
+
+msgid "An error occurred. Please try again."
+msgstr "Ocurrió un error. Intente nuevamente."
+
+msgid "Access Denied \u2014 Administrator role required."
+msgstr "Acceso Denegado \u2014 Se requiere rol de Administrador."
+
+msgid "Default admin account created.\nUsername: admin   Password: admin123\nChange your password immediately!"
+msgstr "Cuenta admin predeterminada creada.\nUsuario: admin   Contraseña: admin123\n¡Cambie su contraseña inmediatamente!"
+
+# Import Wizard
+msgid "Step 1: Select Import Type"
+msgstr "Paso 1: Seleccionar Tipo de Importación"
+
+msgid "Step 2: Choose File"
+msgstr "Paso 2: Elegir Archivo"
+
+msgid "Step 3: Validate"
+msgstr "Paso 3: Validar"
+
+msgid "Step 4: Options"
+msgstr "Paso 4: Opciones"
+
+msgid "Step 5: Execute"
+msgstr "Paso 5: Ejecutar"
+
+msgid "Overwrite existing records"
+msgstr "Sobrescribir registros existentes"
+
+msgid "No file selected"
+msgstr "Ningún archivo seleccionado"
+
+msgid "Validation passed"
+msgstr "Validación aprobada"
+
+msgid "Validation failed"
+msgstr "Validación fallida"
+
+# Plural forms
+msgid "%(n)d row imported"
+msgid_plural "%(n)d rows imported"
+msgstr[0] "%(n)d fila importada"
+msgstr[1] "%(n)d filas importadas"
+
+msgid "%(n)d row skipped"
+msgid_plural "%(n)d rows skipped"
+msgstr[0] "%(n)d fila omitida"
+msgstr[1] "%(n)d filas omitidas"
+
+msgid "%(n)d open order"
+msgid_plural "%(n)d open orders"
+msgstr[0] "%(n)d pedido abierto"
+msgstr[1] "%(n)d pedidos abiertos"
+
+msgid "%(n)d alert"
+msgid_plural "%(n)d alerts"
+msgstr[0] "%(n)d alerta"
+msgstr[1] "%(n)d alertas"
+
+msgid "%(n)d product"
+msgid_plural "%(n)d products"
+msgstr[0] "%(n)d producto"
+msgstr[1] "%(n)d productos"
+
+msgid "%(n)d supplier"
+msgid_plural "%(n)d suppliers"
+msgstr[0] "%(n)d proveedor"
+msgstr[1] "%(n)d proveedores"

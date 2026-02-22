@@ -1,0 +1,548 @@
+# Logistics DSS — English (master catalog)
+# Copyright (C) 2026 Gilvan de Azevedo
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Logistics DSS 1.0.0\n"
+"POT-Creation-Date: 2026-02-22 09:00+0000\n"
+"PO-Revision-Date: 2026-02-22 09:00+0000\n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Navigation
+msgid "Executive"
+msgstr "Executive"
+
+msgid "Dashboard"
+msgstr "Dashboard"
+
+msgid "Inventory"
+msgstr "Inventory"
+
+msgid "Analytics"
+msgstr "Analytics"
+
+msgid "Forecasting"
+msgstr "Forecasting"
+
+msgid "Optimisation"
+msgstr "Optimisation"
+
+msgid "Import Data"
+msgstr "Import Data"
+
+msgid "Import Wizard"
+msgstr "Import Wizard"
+
+msgid "Settings"
+msgstr "Settings"
+
+msgid "Audit Log"
+msgstr "Audit Log"
+
+msgid "Reports"
+msgstr "Reports"
+
+msgid "Suppliers"
+msgstr "Suppliers"
+
+msgid "Purchase Orders"
+msgstr "Purchase Orders"
+
+# App frame labels
+msgid "Appearance:"
+msgstr "Appearance:"
+
+msgid "Language:"
+msgstr "Language:"
+
+# Common controls
+msgid "Refresh"
+msgstr "Refresh"
+
+msgid "Category:"
+msgstr "Category:"
+
+msgid "Period:"
+msgstr "Period:"
+
+msgid "History (days):"
+msgstr "History (days):"
+
+msgid "Horizon (days):"
+msgstr "Horizon (days):"
+
+msgid "Method:"
+msgstr "Method:"
+
+msgid "Export Excel"
+msgstr "Export Excel"
+
+msgid "Export CSV"
+msgstr "Export CSV"
+
+# Buttons
+msgid "Log In"
+msgstr "Log In"
+
+msgid "Authenticating\u2026"
+msgstr "Authenticating\u2026"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Save Settings"
+msgstr "Save Settings"
+
+msgid "Reset to Defaults"
+msgstr "Reset to Defaults"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Submit"
+msgstr "Submit"
+
+msgid "Receive"
+msgstr "Receive"
+
+msgid "Search"
+msgstr "Search"
+
+msgid "Create"
+msgstr "Create"
+
+msgid "Deactivate"
+msgstr "Deactivate"
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Next"
+msgstr "Next"
+
+msgid "Browse\u2026"
+msgstr "Browse\u2026"
+
+msgid "Run Import"
+msgstr "Run Import"
+
+msgid "+ Add Schedule"
+msgstr "+ Add Schedule"
+
+msgid "+ Add User"
+msgstr "+ Add User"
+
+msgid "Create User"
+msgstr "Create User"
+
+# DataTable column headers
+msgid "SKU"
+msgstr "SKU"
+
+msgid "Product"
+msgstr "Product"
+
+msgid "Product Name"
+msgstr "Product Name"
+
+msgid "Category"
+msgstr "Category"
+
+msgid "Stock"
+msgstr "Stock"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Days Left"
+msgstr "Days Left"
+
+msgid "ROP"
+msgstr "ROP"
+
+msgid "EOQ"
+msgstr "EOQ"
+
+msgid "Safety Stk."
+msgstr "Safety Stk."
+
+msgid "Urgency"
+msgstr "Urgency"
+
+msgid "Avg/Day"
+msgstr "Avg/Day"
+
+msgid "Fcst/Day"
+msgstr "Fcst/Day"
+
+msgid "Revenue ($)"
+msgstr "Revenue ($)"
+
+msgid "Units Sold"
+msgstr "Units Sold"
+
+msgid "Savings ($)"
+msgstr "Savings ($)"
+
+msgid "Savings %"
+msgstr "Savings %"
+
+msgid "Unit Cost"
+msgstr "Unit Cost"
+
+msgid "Unit Price"
+msgstr "Unit Price"
+
+msgid "Stock Value"
+msgstr "Stock Value"
+
+msgid "Rev. %"
+msgstr "Rev. %"
+
+msgid "Cumul. %"
+msgstr "Cumul. %"
+
+msgid "Turnover"
+msgstr "Turnover"
+
+msgid "DOI"
+msgstr "DOI"
+
+msgid "Class"
+msgstr "Class"
+
+msgid "Orders/Yr"
+msgstr "Orders/Yr"
+
+msgid "Opt. Cost ($)"
+msgstr "Opt. Cost ($)"
+
+msgid "Curr. Cost ($)"
+msgstr "Curr. Cost ($)"
+
+msgid "Recommendation"
+msgstr "Recommendation"
+
+msgid "Timestamp"
+msgstr "Timestamp"
+
+msgid "Event Type"
+msgstr "Event Type"
+
+msgid "Actor"
+msgstr "Actor"
+
+msgid "Entity"
+msgstr "Entity"
+
+msgid "Detail"
+msgstr "Detail"
+
+msgid "Username"
+msgstr "Username"
+
+msgid "Display Name"
+msgstr "Display Name"
+
+msgid "Role"
+msgstr "Role"
+
+msgid "Active"
+msgstr "Active"
+
+msgid "Last Login"
+msgstr "Last Login"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Format"
+msgstr "Format"
+
+msgid "Cron"
+msgstr "Cron"
+
+msgid "Last Run"
+msgstr "Last Run"
+
+msgid "Next Run"
+msgstr "Next Run"
+
+# View titles and section headers
+msgid "Executive Dashboard"
+msgstr "Executive Dashboard"
+
+msgid "Reorder Alerts (Critical and Warning)"
+msgstr "Reorder Alerts (Critical and Warning)"
+
+msgid "Top EOQ Savings Opportunities"
+msgstr "Top EOQ Savings Opportunities"
+
+msgid "Top Revenue Products"
+msgstr "Top Revenue Products"
+
+msgid "Low Stock Alerts"
+msgstr "Low Stock Alerts"
+
+msgid "Inventory Value by Category"
+msgstr "Inventory Value by Category"
+
+msgid "Daily Sales Revenue"
+msgstr "Daily Sales Revenue"
+
+msgid "Select a product to view details"
+msgstr "Select a product to view details"
+
+msgid "ABC Classification \u2014 Class Summary"
+msgstr "ABC Classification \u2014 Class Summary"
+
+msgid "Product Classification Detail"
+msgstr "Product Classification Detail"
+
+msgid "Class A \u2014 High Value"
+msgstr "Class A \u2014 High Value"
+
+msgid "Class B \u2014 Medium Value"
+msgstr "Class B \u2014 Medium Value"
+
+msgid "Class C \u2014 Low Value"
+msgstr "Class C \u2014 Low Value"
+
+msgid "Demand Overview"
+msgstr "Demand Overview"
+
+msgid "Product Demand Forecast"
+msgstr "Product Demand Forecast"
+
+msgid "Reorder Recommendations"
+msgstr "Reorder Recommendations"
+
+msgid "Select a product row below to view its forecast chart."
+msgstr "Select a product row below to view its forecast chart."
+
+msgid "Cost Optimisation Summary"
+msgstr "Cost Optimisation Summary"
+
+msgid "Per-Product Optimisation Detail"
+msgstr "Per-Product Optimisation Detail"
+
+msgid "GENERAL"
+msgstr "GENERAL"
+
+msgid "SCHEDULED REPORTS"
+msgstr "SCHEDULED REPORTS"
+
+msgid "USER MANAGEMENT"
+msgstr "USER MANAGEMENT"
+
+msgid "Showing 200 most recent events"
+msgstr "Showing 200 most recent events"
+
+msgid "Decision Support System"
+msgstr "Decision Support System"
+
+# KPI card labels
+msgid "Revenue"
+msgstr "Revenue"
+
+msgid "Inventory Value"
+msgstr "Inventory Value"
+
+msgid "Carrying Cost/Month"
+msgstr "Carrying Cost/Month"
+
+msgid "Stockout Rate"
+msgstr "Stockout Rate"
+
+msgid "EOQ Pot. Savings"
+msgstr "EOQ Pot. Savings"
+
+msgid "Fill Rate"
+msgstr "Fill Rate"
+
+msgid "Total SKUs"
+msgstr "Total SKUs"
+
+msgid "Total Units"
+msgstr "Total Units"
+
+msgid "Days of Supply"
+msgstr "Days of Supply"
+
+msgid "Carrying Cost"
+msgstr "Carrying Cost"
+
+msgid "Products"
+msgstr "Products"
+
+msgid "Revenue Share"
+msgstr "Revenue Share"
+
+msgid "Critical SKUs"
+msgstr "Critical SKUs"
+
+msgid "Warning SKUs"
+msgstr "Warning SKUs"
+
+msgid "On Track SKUs"
+msgstr "On Track SKUs"
+
+msgid "No Demand SKUs"
+msgstr "No Demand SKUs"
+
+msgid "Current Annual Cost"
+msgstr "Current Annual Cost"
+
+msgid "Optimal Annual Cost"
+msgstr "Optimal Annual Cost"
+
+msgid "Potential Savings"
+msgstr "Potential Savings"
+
+msgid "SKUs w/ Savings"
+msgstr "SKUs w/ Savings"
+
+# Chart titles
+msgid "Daily Revenue Trend"
+msgstr "Daily Revenue Trend"
+
+msgid "Revenue by ABC Class (%)"
+msgstr "Revenue by ABC Class (%)"
+
+msgid "Revenue by ABC Class ($)"
+msgstr "Revenue by ABC Class ($)"
+
+msgid "Products by ABC Class"
+msgstr "Products by ABC Class"
+
+msgid "Potential Savings by Category ($)"
+msgstr "Potential Savings by Category ($)"
+
+msgid "Annual Inventory Cost ($)"
+msgstr "Annual Inventory Cost ($)"
+
+# Form / modal field labels
+msgid "Log level:"
+msgstr "Log level:"
+
+msgid "Theme:"
+msgstr "Theme:"
+
+msgid "Export dir:"
+msgstr "Export dir:"
+
+msgid "Ordering cost ($):"
+msgstr "Ordering cost ($):"
+
+msgid "Service level:"
+msgstr "Service level:"
+
+msgid "Event Type:"
+msgstr "Event Type:"
+
+msgid "Actor:"
+msgstr "Actor:"
+
+msgid "Report Type"
+msgstr "Report Type"
+
+msgid "Cron (5-field)"
+msgstr "Cron (5-field)"
+
+msgid "Output Dir"
+msgstr "Output Dir"
+
+msgid "Password"
+msgstr "Password"
+
+# Modal titles
+msgid "Add Schedule"
+msgstr "Add Schedule"
+
+msgid "Add User"
+msgstr "Add User"
+
+# Error and validation messages
+msgid "Invalid username or password."
+msgstr "Invalid username or password."
+
+msgid "Please enter your username."
+msgstr "Please enter your username."
+
+msgid "Account locked. Contact your administrator."
+msgstr "Account locked. Contact your administrator."
+
+msgid "An error occurred. Please try again."
+msgstr "An error occurred. Please try again."
+
+msgid "Access Denied \u2014 Administrator role required."
+msgstr "Access Denied \u2014 Administrator role required."
+
+msgid "Default admin account created.\nUsername: admin   Password: admin123\nChange your password immediately!"
+msgstr "Default admin account created.\nUsername: admin   Password: admin123\nChange your password immediately!"
+
+# Import Wizard
+msgid "Step 1: Select Import Type"
+msgstr "Step 1: Select Import Type"
+
+msgid "Step 2: Choose File"
+msgstr "Step 2: Choose File"
+
+msgid "Step 3: Validate"
+msgstr "Step 3: Validate"
+
+msgid "Step 4: Options"
+msgstr "Step 4: Options"
+
+msgid "Step 5: Execute"
+msgstr "Step 5: Execute"
+
+msgid "Overwrite existing records"
+msgstr "Overwrite existing records"
+
+msgid "No file selected"
+msgstr "No file selected"
+
+msgid "Validation passed"
+msgstr "Validation passed"
+
+msgid "Validation failed"
+msgstr "Validation failed"
+
+# Plural forms
+msgid "%(n)d row imported"
+msgid_plural "%(n)d rows imported"
+msgstr[0] "%(n)d row imported"
+msgstr[1] "%(n)d rows imported"
+
+msgid "%(n)d row skipped"
+msgid_plural "%(n)d rows skipped"
+msgstr[0] "%(n)d row skipped"
+msgstr[1] "%(n)d rows skipped"
+
+msgid "%(n)d open order"
+msgid_plural "%(n)d open orders"
+msgstr[0] "%(n)d open order"
+msgstr[1] "%(n)d open orders"
+
+msgid "%(n)d alert"
+msgid_plural "%(n)d alerts"
+msgstr[0] "%(n)d alert"
+msgstr[1] "%(n)d alerts"
+
+msgid "%(n)d product"
+msgid_plural "%(n)d products"
+msgstr[0] "%(n)d product"
+msgstr[1] "%(n)d products"
+
+msgid "%(n)d supplier"
+msgid_plural "%(n)d suppliers"
+msgstr[0] "%(n)d supplier"
+msgstr[1] "%(n)d suppliers"

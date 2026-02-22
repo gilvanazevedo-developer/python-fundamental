@@ -30,6 +30,7 @@ from src.ui.theme import (
 )
 from src.i18n import t
 from src.logger import LoggerMixin
+from src.services.translation_service import translate as _gt
 from config.constants import ROLE_ADMIN
 
 _LOG_LEVELS = ["DEBUG", "INFO", "WARNING", "ERROR"]
@@ -59,9 +60,10 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
         self._scroll = ctk.CTkScrollableFrame(self, fg_color="transparent")
         self._scroll.pack(fill="both", expand=True)
 
-        ctk.CTkLabel(
-            self._scroll, text="Settings", font=FONT_SUBHEADER, anchor="w"
-        ).pack(fill="x", padx=SECTION_PADDING, pady=(SECTION_PADDING, 10))
+        self._lbl_page_title = ctk.CTkLabel(
+            self._scroll, text=_gt("Settings"), font=FONT_SUBHEADER, anchor="w"
+        )
+        self._lbl_page_title.pack(fill="x", padx=SECTION_PADDING, pady=(SECTION_PADDING, 10))
 
         # ── General Settings ───────────────────────────────────────────
         self._build_general_section()
@@ -77,31 +79,31 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
         # ── Save / Reset buttons ───────────────────────────────────────
         btn_frame = ctk.CTkFrame(self._scroll, fg_color="transparent")
         btn_frame.pack(fill="x", padx=SECTION_PADDING, pady=(10, SECTION_PADDING))
-        ctk.CTkButton(
-            btn_frame, text="Save Settings", width=140,
+        self._btn_save = ctk.CTkButton(
+            btn_frame, text=_gt("Save Settings"), width=140,
             command=self._save_settings,
-        ).grid(row=0, column=0, padx=(0, 10))
-        ctk.CTkButton(
-            btn_frame, text="Reset to Defaults", width=140,
+        )
+        self._btn_save.grid(row=0, column=0, padx=(0, 10))
+        self._btn_reset = ctk.CTkButton(
+            btn_frame, text=_gt("Reset to Defaults"), width=140,
             fg_color=COLOR_NEUTRAL,
             command=self._reset_to_defaults,
-        ).grid(row=0, column=1)
+        )
+        self._btn_reset.grid(row=0, column=1)
 
     def _build_general_section(self):
         section = ctk.CTkFrame(self._scroll)
         section.pack(fill="x", padx=SECTION_PADDING, pady=(0, 10))
 
-        ctk.CTkLabel(section, text="GENERAL", font=FONT_BODY).pack(
-            anchor="w", padx=12, pady=(10, 4)
-        )
+        self._lbl_general_header = ctk.CTkLabel(section, text=_gt("GENERAL"), font=FONT_BODY)
+        self._lbl_general_header.pack(anchor="w", padx=12, pady=(10, 4))
 
         row_frame = ctk.CTkFrame(section, fg_color="transparent")
         row_frame.pack(fill="x", padx=12, pady=(0, 10))
 
         # Log level
-        ctk.CTkLabel(row_frame, text="Log level:", font=FONT_SMALL).grid(
-            row=0, column=0, padx=(0, 6), sticky="w"
-        )
+        self._lbl_log_level = ctk.CTkLabel(row_frame, text=_gt("Log level:"), font=FONT_SMALL)
+        self._lbl_log_level.grid(row=0, column=0, padx=(0, 6), sticky="w")
         self._log_level_var = ctk.StringVar(value=self._settings.get("log_level", "INFO"))
         ctk.CTkOptionMenu(
             row_frame, variable=self._log_level_var,
@@ -109,9 +111,8 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
         ).grid(row=0, column=1, padx=(0, 20), sticky="w")
 
         # Theme
-        ctk.CTkLabel(row_frame, text="Theme:", font=FONT_SMALL).grid(
-            row=0, column=2, padx=(0, 6), sticky="w"
-        )
+        self._lbl_theme = ctk.CTkLabel(row_frame, text=_gt("Theme:"), font=FONT_SMALL)
+        self._lbl_theme.grid(row=0, column=2, padx=(0, 6), sticky="w")
         self._theme_var = ctk.StringVar(value=self._settings.get("theme", "dark"))
         ctk.CTkOptionMenu(
             row_frame, variable=self._theme_var,
@@ -120,9 +121,8 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
         ).grid(row=0, column=3, padx=(0, 20), sticky="w")
 
         # Export dir
-        ctk.CTkLabel(row_frame, text="Export dir:", font=FONT_SMALL).grid(
-            row=1, column=0, padx=(0, 6), pady=(8, 0), sticky="w"
-        )
+        self._lbl_export_dir = ctk.CTkLabel(row_frame, text=_gt("Export dir:"), font=FONT_SMALL)
+        self._lbl_export_dir.grid(row=1, column=0, padx=(0, 6), pady=(8, 0), sticky="w")
         self._export_dir_var = ctk.StringVar(value=self._settings.get("export_dir", "exports/"))
         ctk.CTkEntry(
             row_frame, textvariable=self._export_dir_var, width=260, height=28,
@@ -134,7 +134,8 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
 
         header = ctk.CTkFrame(section, fg_color="transparent")
         header.pack(fill="x", padx=12, pady=(10, 4))
-        ctk.CTkLabel(header, text="SCHEDULED REPORTS", font=FONT_BODY).pack(side="left")
+        self._lbl_schedule_header = ctk.CTkLabel(header, text=_gt("SCHEDULED REPORTS"), font=FONT_BODY)
+        self._lbl_schedule_header.pack(side="left")
 
         self._schedule_table = DataTable(
             section,
@@ -152,19 +153,23 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
 
         btn_row = ctk.CTkFrame(section, fg_color="transparent")
         btn_row.pack(fill="x", padx=12, pady=(0, 10))
-        ctk.CTkButton(btn_row, text="+ Add Schedule", width=120, height=26,
-                      command=self._add_schedule_dialog).grid(row=0, column=0, padx=(0, 8))
-        ctk.CTkButton(btn_row, text="Deactivate", width=100, height=26,
-                      fg_color=COLOR_WARNING, command=self._deactivate_selected_schedule
-                      ).grid(row=0, column=1)
+        self._btn_add_schedule = ctk.CTkButton(
+            btn_row, text=_gt("+ Add Schedule"), width=120, height=26,
+            command=self._add_schedule_dialog,
+        )
+        self._btn_add_schedule.grid(row=0, column=0, padx=(0, 8))
+        self._btn_deactivate_schedule = ctk.CTkButton(
+            btn_row, text=_gt("Deactivate"), width=100, height=26,
+            fg_color=COLOR_WARNING, command=self._deactivate_selected_schedule,
+        )
+        self._btn_deactivate_schedule.grid(row=0, column=1)
 
     def _build_user_section(self):
         section = ctk.CTkFrame(self._scroll)
         section.pack(fill="x", padx=SECTION_PADDING, pady=(0, 10))
 
-        ctk.CTkLabel(section, text="USER MANAGEMENT", font=FONT_BODY).pack(
-            anchor="w", padx=12, pady=(10, 4)
-        )
+        self._lbl_user_header = ctk.CTkLabel(section, text=_gt("USER MANAGEMENT"), font=FONT_BODY)
+        self._lbl_user_header.pack(anchor="w", padx=12, pady=(10, 4))
 
         self._user_table = DataTable(
             section,
@@ -181,11 +186,16 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
 
         btn_row = ctk.CTkFrame(section, fg_color="transparent")
         btn_row.pack(fill="x", padx=12, pady=(0, 10))
-        ctk.CTkButton(btn_row, text="+ Add User", width=100, height=26,
-                      command=self._add_user_dialog).grid(row=0, column=0, padx=(0, 8))
-        ctk.CTkButton(btn_row, text="Deactivate", width=100, height=26,
-                      fg_color=COLOR_DANGER, command=self._deactivate_selected_user
-                      ).grid(row=0, column=1)
+        self._btn_add_user = ctk.CTkButton(
+            btn_row, text=_gt("+ Add User"), width=100, height=26,
+            command=self._add_user_dialog,
+        )
+        self._btn_add_user.grid(row=0, column=0, padx=(0, 8))
+        self._btn_deactivate_user = ctk.CTkButton(
+            btn_row, text=_gt("Deactivate"), width=100, height=26,
+            fg_color=COLOR_DANGER, command=self._deactivate_selected_user,
+        )
+        self._btn_deactivate_user.grid(row=0, column=1)
 
     # ------------------------------------------------------------------
     # Refresh
@@ -362,4 +372,30 @@ class SettingsView(ctk.CTkFrame, LoggerMixin):
         self._stale = True
 
     def update_language(self):
-        pass
+        """Re-apply translated text to all stored widget references."""
+        if hasattr(self, "_lbl_page_title"):
+            self._lbl_page_title.configure(text=_gt("Settings"))
+        if hasattr(self, "_lbl_general_header"):
+            self._lbl_general_header.configure(text=_gt("GENERAL"))
+        if hasattr(self, "_lbl_log_level"):
+            self._lbl_log_level.configure(text=_gt("Log level:"))
+        if hasattr(self, "_lbl_theme"):
+            self._lbl_theme.configure(text=_gt("Theme:"))
+        if hasattr(self, "_lbl_export_dir"):
+            self._lbl_export_dir.configure(text=_gt("Export dir:"))
+        if hasattr(self, "_lbl_schedule_header"):
+            self._lbl_schedule_header.configure(text=_gt("SCHEDULED REPORTS"))
+        if hasattr(self, "_lbl_user_header"):
+            self._lbl_user_header.configure(text=_gt("USER MANAGEMENT"))
+        if hasattr(self, "_btn_save"):
+            self._btn_save.configure(text=_gt("Save Settings"))
+        if hasattr(self, "_btn_reset"):
+            self._btn_reset.configure(text=_gt("Reset to Defaults"))
+        if hasattr(self, "_btn_add_schedule"):
+            self._btn_add_schedule.configure(text=_gt("+ Add Schedule"))
+        if hasattr(self, "_btn_deactivate_schedule"):
+            self._btn_deactivate_schedule.configure(text=_gt("Deactivate"))
+        if hasattr(self, "_btn_add_user"):
+            self._btn_add_user.configure(text=_gt("+ Add User"))
+        if hasattr(self, "_btn_deactivate_user"):
+            self._btn_deactivate_user.configure(text=_gt("Deactivate"))
